@@ -121,11 +121,12 @@ export default function AdminAnimePage() {
       });
       toast.success("Đã lưu thành công!");
       console.log(result);
-    } catch (error: any) {
+    } catch (error) {
       setMessage("❌ Lỗi lưu!");
-      if (error?.response?.status === 404) {
-        toast.warning("Không có thông tin cập nhật");
-      }
+      console.log(error);
+      // if (error?.response?.status === 404) {
+      //   toast.warning("Không có thông tin cập nhật");
+      // }
     } finally {
       setLoading(false);
       setAnimeDetail(undefined);
