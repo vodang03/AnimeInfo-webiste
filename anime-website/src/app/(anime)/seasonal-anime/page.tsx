@@ -1,4 +1,4 @@
-"use client"; // 👈 BẮT BUỘC để dùng useState, useEffect
+"use client";
 
 import { fetchSeasonalAnime } from "@/api/anime";
 import AnimeList from "@/components/AnimeList";

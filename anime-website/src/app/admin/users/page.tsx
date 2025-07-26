@@ -12,49 +12,6 @@ interface UserInfo {
   avatar_url?: string;
 }
 
-// const mockUsers: UserInfo[] = [
-//   {
-//     id: 1,
-//     name: "Yeray Rosales",
-//     email: "name@email.com",
-//     roles: ["Manager", "Admin", "Auditor"],
-//     loggedIn: false,
-//     avatar: "https://i.pravatar.cc/40?img=1",
-//   },
-//   {
-//     id: 2,
-//     name: "Lennert Nijenbivank",
-//     email: "name@email.com",
-//     roles: ["Manager", "Admin"],
-//     loggedIn: true,
-//     avatar: "https://i.pravatar.cc/40?img=2",
-//   },
-//   {
-//     id: 3,
-//     name: "Tallah Cotton",
-//     email: "name@email.com",
-//     roles: ["Admin", "Auditor"],
-//     loggedIn: true,
-//     avatar: "https://i.pravatar.cc/40?img=3",
-//   },
-//   {
-//     id: 4,
-//     name: "Adaora Azubuike",
-//     email: "name@email.com",
-//     roles: ["Admin", "Auditor"],
-//     loggedIn: false,
-//     avatar: "https://i.pravatar.cc/40?img=4",
-//   },
-//   {
-//     id: 5,
-//     name: "Antonin Hafer",
-//     email: "name@email.com",
-//     roles: ["Manager"],
-//     loggedIn: true,
-//     avatar: "https://i.pravatar.cc/40?img=5",
-//   },
-// ];
-
 const RoleBadge = ({ role }: { role: string }) => {
   const colors: Record<string, string> = {
     admin: "bg-green-600",
