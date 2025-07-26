@@ -1,6 +1,12 @@
-import { User } from "@/app/user/[id]/page";
 import axios from "axios";
 import api from "./api";
+
+interface User {
+  username: string;
+  email: string;
+  phone_number: string;
+  avatar_url: string;
+}
 
 export const fetchAllUser = async () => {
   try {
@@ -28,6 +34,8 @@ export const updateUserByID = async (
   id: number,
   updatedData: Partial<User>
 ) => {
+  console.log("Thông tin sẽ được cập nhật: ", updatedData);
+
   try {
     const response = await axios.put(
       `http://localhost:5000/api/user/${id}`,

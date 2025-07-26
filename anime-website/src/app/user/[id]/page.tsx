@@ -16,19 +16,6 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export interface User {
-  user_id: number;
-  username: string;
-  email: string;
-  password_hash: string;
-  role: "user" | "admin";
-  avatar_url: string;
-  bio: string;
-  phone_number: string;
-  birthDate: Date;
-  created_at: string; // hoặc Date nếu bạn parse nó
-}
-
 export interface Avatar {
   id: number;
   image_url: string;
