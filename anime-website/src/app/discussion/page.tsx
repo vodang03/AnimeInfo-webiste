@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import CreateRoomModal from "@/components/CreateRoomModal";
 import JoinRoomModal from "@/components/JoinRoomModal";
-import { checkLogin } from "@/utils/checkLogin";
+// import { checkLogin } from "@/utils/checkLogin";
 import {
   createDiscussionRoom,
   fetchDiscussionRooms,
@@ -88,13 +88,6 @@ export default function DiscussionRoomList() {
   };
 
   const handleCreateRoom = async (title: string, maxMember: number) => {
-    const currentUserId = getCurrentUserId();
-
-    if (!currentUserId) {
-      toast.warning("Bạn cần đăng nhập để tạo phòng thảo luận!");
-      return;
-    }
-
     try {
       const newRoom = await createDiscussionRoom(
         user!.user.user_id,
@@ -143,8 +136,11 @@ export default function DiscussionRoomList() {
   };
 
   const handleOpenCreateModal = () => {
-    if (checkLogin(user!.user.user_id)) {
+    if (user) {
       setShowModal(true);
+    } else {
+      toast.warning("Bạn cần đăng nhập để tạo phòng thảo luận!");
+      return;
     }
   };
 
