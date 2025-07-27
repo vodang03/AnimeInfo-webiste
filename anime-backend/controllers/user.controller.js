@@ -196,3 +196,33 @@ exports.delAccount = async (req, res) => {
     return res.status(500).json({ message: "Lỗi server khi xóa người dùng." });
   }
 };
+
+exports.toggleLockAccount = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Tìm người dùng
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "Không tìm thấy người dùng." });
+    }
+
+    // Đảo ngược trạng thái khoá/mở
+    user.is_locked = !user.is_locked;
+
+    await user.save();
+
+    return res.status(200).json({
+      message: user.is_locked
+        ? "Tài khoản đã bị khoá."
+        : "Tài khoản đã được mở.",
+      is_locked: user.is_locked,
+    });
+  } catch (error) {
+    console.error("Lỗi khi khoá/mở tài khoản:", error);
+    return res
+      .status(500)
+      .json({ message: "Lỗi server khi cập nhật trạng thái tài khoản." });
+  }
+};

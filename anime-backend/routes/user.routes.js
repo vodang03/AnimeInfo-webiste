@@ -9,6 +9,7 @@ const {
   addComment,
   getComment,
   delAccount,
+  toggleLockAccount,
 } = require("../controllers/user.controller");
 const router = express.Router();
 
@@ -24,6 +25,8 @@ router.get("/comment", getComment);
 router.get("/:id", getUserByID);
 router.put("/:id", updateUserByID);
 router.delete("/:id", delAccount);
+
+router.patch("/:id/toggle-lock", toggleLockAccount);
 
 router.get("/genre/:id", getGenresByUserID);
 

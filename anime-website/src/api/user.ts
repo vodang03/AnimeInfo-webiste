@@ -118,6 +118,10 @@ export const fetchCurrentUser = async () => {
   return res.data;
 };
 
+export const toggleAccountLock = async (user_id: number) => {
+  await axios.patch(`http://localhost:5000/api/user/${user_id}/toggle-lock`);
+};
+
 export const fetchAllAvatar = async () => {
   const res = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/api/user/avatar`

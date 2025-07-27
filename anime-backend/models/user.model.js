@@ -47,6 +47,10 @@ const User = sequelize.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
+    is_locked: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,

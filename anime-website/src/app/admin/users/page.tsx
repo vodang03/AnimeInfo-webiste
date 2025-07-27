@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Trash2, Settings } from "lucide-react";
-import { fetchAllUser } from "@/api/user";
+import { delAccount, fetchAllUser, toggleAccountLock } from "@/api/user";
 
 interface UserInfo {
   user_id: number;
@@ -10,6 +10,7 @@ interface UserInfo {
   email: string;
   role: string; // ví dụ: ["Admin", "User"]
   avatar_url?: string;
+  is_locked: boolean;
 }
 
 const RoleBadge = ({ role }: { role: string }) => {
@@ -28,6 +29,11 @@ const RoleBadge = ({ role }: { role: string }) => {
   );
 };
 
+const deleteAccount = async (user_id: number) => {
+  await delAccount(user_id);
+  location.reload();
+};
+
 export default function AdminUserList() {
   const [users, setUsers] = useState<UserInfo[]>([]);
 
@@ -42,6 +48,8 @@ export default function AdminUserList() {
     };
     getuser();
   }, []);
+
+  console.log("Các thông tin user: ", users);
 
   return (
     <div className="mx-auto p-6 bg-white rounded-xl shadow-md">
@@ -84,11 +92,21 @@ export default function AdminUserList() {
                 {/* Actions column */}
                 <td className="p-3">
                   <div className="flex space-x-4">
-                    <button className="flex items-center text-sm text-gray-700 hover:text-indigo-600 transition">
+                    <button
+                      className="flex items-center text-sm text-yellow-600 hover:text-yellow-800 transition"
+                      onClick={async () => {
+                        await toggleAccountLock(u.user_id);
+                        location.reload(); // hoặc gọi lại fetchAllUser()
+                      }}
+                    >
                       <Settings className="w-4 h-4 mr-1" />
-                      Điều chỉnh thông tin
+                      {u.is_locked ? "Mở tài khoản" : "Khoá tài khoản"}
                     </button>
-                    <button className="flex items-center text-sm text-red-600 hover:text-red-800 transition">
+
+                    <button
+                      className="flex items-center text-sm text-red-600 hover:text-red-800 transition"
+                      onClick={() => deleteAccount(u.user_id)}
+                    >
                       <Trash2 className="w-4 h-4 mr-1" />
                       Xoá tài khoản
                     </button>
