@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { checkUserLogin, fetchCurrentUser } from "@/api/user";
 import { useUser } from "@/contexts/UserContext";
+import axios from "axios"; // nhớ import
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,18 +22,26 @@ export default function LoginPage() {
     try {
       const res = await checkUserLogin(emailOrUsername, password); // cookie sẽ tự lưu token
 
-      console.log(res);
       if (res.status === 200) {
         const user = await fetchCurrentUser(); // ✅ Gọi lại API để lấy user sau đăng nhập
         setUser(user); // ✅ Lưu vào context
         toast.success("Đăng nhập thành công!");
         router.push("/"); // chuyển hướng sau khi đăng nhập
       }
-    } catch (error: any) {
-      if (error.status === 403) {
-        toast.error("Tài khoản của bạn đã bị khoá.");
-      } else if (error.status === 401) {
-        toast.error(error.response.data.message);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const message = error.response?.data?.message;
+
+        if (status === 403) {
+          toast.error("Tài khoản của bạn đã bị khoá.");
+        } else if (status === 401) {
+          toast.error(message || "Thông tin đăng nhập không hợp lệ.");
+        } else {
+          toast.error("Lỗi không xác định từ máy chủ.");
+        }
+      } else {
+        toast.error("Đã xảy ra lỗi không xác định.");
       }
     }
   };
