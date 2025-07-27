@@ -118,9 +118,11 @@ exports.logoutAcc = (req, res) => {
   console.log("Được gọi tới");
   res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "Strict",
+    secure: true, // giống với khi set cookie
+    sameSite: "None", // phải giống với khi set cookie
+    path: "/", // nếu có set path khi tạo cookie, phải có path khi xóa
   });
+
   res.json({ message: "Đăng xuất thành công." });
 };
 
