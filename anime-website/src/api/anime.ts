@@ -49,7 +49,7 @@ export const fetchSeasonalAnime = async (season: string, year: number) => {
   console.log(process.env.NEXT_PUBLIC_API_URL);
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/seasonal`,
+      `https://magnificent-manifestation-production-9563.up.railway.app/api/anime/seasonal`,
       {
         params: { season, year },
         // headers: {
