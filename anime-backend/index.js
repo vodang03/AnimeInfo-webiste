@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"], // chính xác domain frontend
+    origin: ["http://localhost:3000", "https://anime-info-webiste.vercel.app"], // chính xác domain frontend
     credentials: true,
   })
 );
@@ -36,7 +36,7 @@ const server = http.createServer(app);
 // // ✅ Khởi tạo socket server
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000", "https://anime-info-webiste.vercel.app"],
+    origin: ["http://localhost:3000"],
     methods: ["GET", "POST"],
     credentials: true, // Nếu dùng auth socket
   },
