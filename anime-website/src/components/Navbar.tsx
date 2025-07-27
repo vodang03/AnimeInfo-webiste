@@ -76,7 +76,8 @@ export default function Navbar({ onSelectAnimeOption }: NavbarProps) {
   // Chức năng đăng xuất
   const handleLogout = async () => {
     try {
-      await logoutUser();
+      const res = await logoutUser();
+      console.log(res);
       setUser(null);
       toast.success("Đã đăng xuất tài khoản thành công");
       router.push("/login");

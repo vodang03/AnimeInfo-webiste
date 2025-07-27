@@ -115,6 +115,7 @@ exports.loginAcc = async (req, res) => {
 
 // ✅ Đăng xuất
 exports.logoutAcc = (req, res) => {
+  console.log("Được gọi tới");
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

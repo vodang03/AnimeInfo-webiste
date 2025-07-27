@@ -54,16 +54,13 @@ export const checkUserLogin = async (
 ) => {
   try {
     const res = await api.post(
-      `http://localhost:5000/api/auth/login`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
       {
         emailOrUsername,
         password,
       },
       {
         withCredentials: true, // nếu có cookie login
-        headers: {
-          "ngrok-skip-browser-warning": "69420",
-        },
       }
     );
 
@@ -74,16 +71,43 @@ export const checkUserLogin = async (
   }
 };
 
+export const registerUser = async (
+  username: string,
+  email: string,
+  password: string,
+  birthDate: string
+) => {
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
+      {
+        username,
+        email,
+        password,
+        birthDate,
+      },
+      {
+        withCredentials: true, // nếu bạn cần cookie / session
+      }
+    );
+
+    return res.data; // Trả về data gồm userId hoặc gì đó bạn cần
+  } catch (err) {
+    console.error("Lỗi khi đăng ký:", err);
+    throw err;
+  }
+};
+
 export const logoutUser = async () => {
   return await axios.post(
-    "http://localhost:5000/api/auth/logout",
+    `${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`,
     {},
     { withCredentials: true }
   );
 };
 
 export const fetchCurrentUser = async () => {
-  const res = await api.get(`http://localhost:5000/api/auth/me`, {
+  const res = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
     withCredentials: true, // nếu có cookie login
     headers: {
       "ngrok-skip-browser-warning": "69420",

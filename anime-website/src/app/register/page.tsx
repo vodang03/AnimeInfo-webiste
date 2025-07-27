@@ -7,6 +7,7 @@ import BirthDatePicker from "@/components/BirthDatePicker";
 import { fetchGenres } from "@/api/anime";
 import { toast } from "react-toastify";
 import genreColorMap from "@/utils/genreColorMap";
+import { registerUser } from "@/api/user";
 
 interface Genre {
   genre_id: number;
@@ -52,7 +53,7 @@ export default function RegisterPage() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/user/genre", {
+      await axios.post(`http://localhost:5000/api/user/genre`, {
         user_id: newUserId, // hoặc user id bạn lấy từ response đăng ký
         genres: selectedGenres,
       });
@@ -75,28 +76,18 @@ export default function RegisterPage() {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        {
-          username,
-          email,
-          password,
-          birthDate,
-        }
+      const { userId } = await registerUser(
+        username,
+        email,
+        password,
+        birthDate
       );
-
-      console.log(response);
-      if (response.status === 201) {
-        const { userId } = response.data;
-        setNewUserId(userId); // Lưu userId để dùng tiếp cho lưu genre
-        setShowGenreModal(true);
-
-        toast.success("Đăng ký thành công!");
-      } else {
-        toast.error("Đăng ký thất bại. Vui lòng thử lại.");
-      }
-    } catch (error) {
-      console.error("Lỗi khi đăng ký:", error);
+      setNewUserId(userId);
+      setShowGenreModal(true);
+      toast.success("Đăng ký thành công!");
+    } catch (err) {
+      toast.error("Đăng ký thất bại. Vui lòng thử lại.");
+      console.log(err);
     }
   };
 
