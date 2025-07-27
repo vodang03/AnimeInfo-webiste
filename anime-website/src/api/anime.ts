@@ -46,7 +46,7 @@ export const fetchGenreAnimeSearch = async (genre?: string) => {
 };
 
 export const fetchSeasonalAnime = async (season: string, year: number) => {
-  console.log(process.env.NEXT_PUBLIC_API_URL);
+  console.log("Link railway: ", process.env.NEXT_PUBLIC_API_URL);
   try {
     const response = await axios.get(
       `https://magnificent-manifestation-production-9563.up.railway.app/api/anime/seasonal`,
