@@ -46,7 +46,7 @@ export const fetchGenreAnimeSearch = async (genre?: string) => {
 };
 
 export const fetchSeasonalAnime = async (season: string, year: number) => {
-  // const url_backend = process.env.NEXT_PUBLIC_API_URL;
+  console.log(process.env.NEXT_PUBLIC_API_URL);
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}/api/anime/seasonal`,
