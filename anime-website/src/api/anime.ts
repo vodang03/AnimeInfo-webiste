@@ -49,13 +49,12 @@ export const fetchSeasonalAnime = async (season: string, year: number) => {
   // const url_backend = process.env.NEXT_PUBLIC_API_URL;
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/anime/seasonal`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/seasonal`,
       {
         params: { season, year },
-        withCredentials: false, // nếu có cookie login
-        headers: {
-          "ngrok-skip-browser-warning": "69420",
-        },
+        // headers: {
+        //   "ngrok-skip-browser-warning": "69420",
+        // },
       }
     );
     return response.data;
