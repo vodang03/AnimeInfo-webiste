@@ -88,6 +88,13 @@ export default function DiscussionRoomList() {
   };
 
   const handleCreateRoom = async (title: string, maxMember: number) => {
+    const currentUserId = getCurrentUserId();
+
+    if (!currentUserId) {
+      toast.warning("Bạn cần đăng nhập để tạo phòng thảo luận!");
+      return;
+    }
+
     try {
       const newRoom = await createDiscussionRoom(
         user!.user.user_id,
