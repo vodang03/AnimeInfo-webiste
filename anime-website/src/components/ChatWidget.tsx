@@ -5,6 +5,8 @@ import { parseUserInput, RequestParams } from "@/utils/parseUserInput";
 import { callApiByType } from "@/utils/apiSelector";
 import { Loader2, Send } from "lucide-react";
 import Link from "next/link";
+import { useUser } from "@/contexts/UserContext";
+import { toast } from "react-toastify";
 
 interface Recommendation {
   mal_id: number;
@@ -30,6 +32,8 @@ export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { user } = useUser();
 
   // Lưu lại thoại trước đó
   const [chatHistory, setChatHistory] = useState<ChatItem[]>([]);
@@ -93,7 +97,13 @@ export default function ChatWidget() {
     <>
       {/* Nút mở chat */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (user) {
+            setIsOpen(!isOpen);
+          } else {
+            toast.warning("Hãy đăng nhập để sử dụng Trợ lý ảo");
+          }
+        }}
         className="fixed bottom-4 right-4 bg-indigo-600 text-white rounded-full p-4 shadow-xl hover:bg-indigo-700 transition duration-300 z-50"
         aria-label="Open chat"
       >
