@@ -5,10 +5,8 @@ import ChatMessage from "@/components/ChatMessage";
 import MessageInput from "@/components/MessageInput";
 import { createMessage, fetchMessages } from "@/api/discussion";
 import { useParams } from "next/navigation";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 import { useUser } from "@/contexts/UserContext";
-
-const socket = io(`${process.env.NEXT_PUBLIC_API_URL}`);
 
 interface message {
   id: number;
@@ -20,60 +18,51 @@ interface message {
 }
 
 export default function ChatPage() {
-  const params = useParams(); // ✅ Hook gọi ở đây là đúng
-  const id = params.id?.toString(); // Chuyển thành string nếu cần
-  const roomId = parseInt(id || "0"); // roomId: number
+  const params = useParams();
+  const id = params.id?.toString();
+  const roomId = parseInt(id || "0");
 
   const { user } = useUser();
 
-  const getCurrentUserId = () => {
-    try {
-      if (user) {
-        return user.user.user_id;
-      }
-    } catch {
-      return null;
-    }
-  };
-
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [messages, setMessages] = useState<message[]>([]);
 
+  // 🔌 Khởi tạo socket chỉ 1 lần
   useEffect(() => {
-    const userId = getCurrentUserId();
+    const newSocket = io(process.env.NEXT_PUBLIC_API_URL!, {
+      transports: ["websocket"],
+    });
+    setSocket(newSocket);
 
-    // console.log(userId);
-    console.log(roomId);
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
 
-    if (!userId || !roomId) return;
+  // 🔁 Lắng nghe khi socket, user, roomId sẵn sàng
+  useEffect(() => {
+    if (!socket || !user?.user?.user_id || !roomId) return;
+
+    const userId = user.user.user_id;
     setCurrentUserId(userId);
 
     fetchMessages(roomId, userId).then(setMessages);
 
-    // 👉 Tham gia phòng chat
     socket.emit("join_room", roomId);
 
-    // 👉 Lắng nghe tin nhắn mới
     socket.on("receive_message", (msg: message) => {
-      // Kiểm tra xác nhận người gửi
       const isSender = msg.userId === userId;
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          ...msg,
-          isSender,
-        },
-      ]);
+      setMessages((prev) => [...prev, { ...msg, isSender }]);
     });
 
     return () => {
       socket.off("receive_message");
     };
-  }, [roomId, user]);
+  }, [socket, user, roomId]);
 
   const handleSend = async (text: string) => {
-    if (!currentUserId) return;
+    if (!currentUserId || !socket) return;
 
     const result = await createMessage(roomId, currentUserId, text, "");
 
@@ -86,11 +75,8 @@ export default function ChatPage() {
       userId: currentUserId,
     };
 
-    // 👉 Gửi qua socket
     socket.emit("send_message", newMessage);
   };
-
-  console.log("Các tin nhắn trong phòng: ", messages);
 
   return (
     <div className="max-w-3xl mx-auto h-[100vh] bg-white relative flex flex-col -mb-36">
