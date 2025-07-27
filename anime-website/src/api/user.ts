@@ -66,7 +66,7 @@ export const checkUserLogin = async (
       }
     );
 
-    return res.data;
+    return res;
   } catch (error) {
     console.error("Error login:", error);
     throw error;

@@ -19,16 +19,21 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      await checkUserLogin(emailOrUsername, password); // cookie sẽ tự lưu token
+      const res = await checkUserLogin(emailOrUsername, password); // cookie sẽ tự lưu token
 
-      const user = await fetchCurrentUser(); // ✅ Gọi lại API để lấy user sau đăng nhập
-      setUser(user); // ✅ Lưu vào context
-
-      toast.success("Đăng nhập thành công!");
-      router.push("/"); // chuyển hướng sau khi đăng nhập
-    } catch (error) {
-      toast.error("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
-      console.error("Lỗi đăng nhập:", error);
+      console.log(res);
+      if (res.status === 200) {
+        const user = await fetchCurrentUser(); // ✅ Gọi lại API để lấy user sau đăng nhập
+        setUser(user); // ✅ Lưu vào context
+        toast.success("Đăng nhập thành công!");
+        router.push("/"); // chuyển hướng sau khi đăng nhập
+      }
+    } catch (error: any) {
+      if (error.status === 403) {
+        toast.error("Tài khoản của bạn đã bị khoá.");
+      } else if (error.status === 401) {
+        toast.error(error.response.data.message);
+      }
     }
   };
 
