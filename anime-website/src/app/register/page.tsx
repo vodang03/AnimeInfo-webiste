@@ -53,7 +53,7 @@ export default function RegisterPage() {
     }
 
     try {
-      await axios.post(`http://localhost:5000/api/user/genre`, {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/user/genre`, {
         user_id: newUserId, // hoặc user id bạn lấy từ response đăng ký
         genres: selectedGenres,
       });

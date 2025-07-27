@@ -66,7 +66,7 @@ export default function DiscussionRoomList() {
     if (!room) return;
 
     const currentUserId = getCurrentUserId();
-    console.log(currentUserId);
+
     if (!currentUserId) {
       toast.warning("Bạn cần đăng nhập để tham gia phòng thảo luận!");
       return;
@@ -89,7 +89,11 @@ export default function DiscussionRoomList() {
 
   const handleCreateRoom = async (title: string, maxMember: number) => {
     try {
-      const newRoom = await createDiscussionRoom(3, title, maxMember);
+      const newRoom = await createDiscussionRoom(
+        user!.user.user_id,
+        title,
+        maxMember
+      );
       setConversations((prev) => [
         {
           id: newRoom.id,
@@ -132,7 +136,7 @@ export default function DiscussionRoomList() {
   };
 
   const handleOpenCreateModal = () => {
-    if (checkLogin()) {
+    if (checkLogin(user!.user.user_id)) {
       setShowModal(true);
     }
   };

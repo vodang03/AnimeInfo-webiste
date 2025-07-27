@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const fetchDiscussionRooms = async () => {
   const response = await axios.get(
-    "http://localhost:5000/api/discussion/getrooms"
+    `${process.env.NEXT_PUBLIC_API_URL}/api/discussion/getrooms`
   );
   return response.data;
 };
@@ -13,7 +13,7 @@ export const createDiscussionRoom = async (
   maxMember: number
 ) => {
   const response = await axios.post(
-    "http://localhost:5000/api/discussion/createroom",
+    `${process.env.NEXT_PUBLIC_API_URL}/api/discussion/createroom`,
     {
       userID,
       title,
@@ -25,7 +25,7 @@ export const createDiscussionRoom = async (
 
 export const joinDiscussionRoom = async (user_id: number, room_id: number) => {
   const response = await axios.post(
-    "http://localhost:5000/api/discussion/joinroom",
+    `${process.env.NEXT_PUBLIC_API_URL}/api/discussion/joinroom`,
     {
       user_id,
       room_id,
@@ -36,14 +36,14 @@ export const joinDiscussionRoom = async (user_id: number, room_id: number) => {
 
 export const fetchRoomMembers = async (roomId: number) => {
   const response = await axios.get(
-    `http://localhost:5000/api/discussion/members/${roomId}`
+    `${process.env.NEXT_PUBLIC_API_URL}/api/discussion/members/${roomId}`
   );
   return response.data;
 };
 
 export const fetchMessages = async (roomId: number, userId: number) => {
   const res = await axios.get(
-    `http://localhost:5000/api/discussion/messages/${roomId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/discussion/messages/${roomId}`,
     { params: { userId: userId } }
   );
   return res.data;
@@ -56,7 +56,7 @@ export const createMessage = async (
   fileurl: string
 ) => {
   const res = await axios.post(
-    `http://localhost:5000/api/discussion/postmessage/${roomId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/discussion/postmessage/${roomId}`,
     {
       room_id: roomId,
       user_id: userId,

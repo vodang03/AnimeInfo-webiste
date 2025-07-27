@@ -29,7 +29,7 @@ export default function TopAnime() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/anime/bestalltime`, {
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/api/anime/bestalltime`, {
         params: {
           page: currentPage,
           limit: itemsPerPage,

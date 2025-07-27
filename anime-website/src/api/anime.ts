@@ -10,9 +10,12 @@ export const fetchAnimeSearch = async (query?: string) => {
       params.q = query;
     }
 
-    const response = await axios.get("http://localhost:5000/api/anime/search", {
-      params,
-    });
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/search`,
+      {
+        params,
+      }
+    );
 
     return response.data; // hoặc response.data.data nếu backend trả về { data: [...] }
   } catch (error) {
@@ -32,7 +35,7 @@ export const fetchGenreAnimeSearch = async (genre?: string) => {
     }
 
     const response = await axios.get(
-      "http://localhost:5000/api/anime/genresearch",
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/genresearch`,
       {
         params,
       }
@@ -66,9 +69,12 @@ export const fetchSeasonalAnime = async (season: string, year: number) => {
 
 export const fetchAnime = async (page: number, limit: number) => {
   try {
-    const response = await axios.get("http://localhost:5000/api/anime/", {
-      params: { page, limit },
-    });
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/`,
+      {
+        params: { page, limit },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching anime:", error);
@@ -76,23 +82,26 @@ export const fetchAnime = async (page: number, limit: number) => {
   }
 };
 
-export const fetchBestAnime = async (page: number, limit: number) => {
-  try {
-    const response = await axios.get("http://localhost:5000/api/anime/best", {
-      params: { page, limit },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching anime:", error);
-    throw error;
-  }
-};
+// export const fetchBestAnime = async (page: number, limit: number) => {
+//   try {
+//     const response = await axios.get("http://localhost:5000/api/anime/best", {
+//       params: { page, limit },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error fetching anime:", error);
+//     throw error;
+//   }
+// };
 
 export const fetchhintAnime = async (searchTerm: string) => {
   try {
-    const res = await axios.get(`http://localhost:5000/api/anime/hint`, {
-      params: { q: searchTerm },
-    });
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/hint`,
+      {
+        params: { q: searchTerm },
+      }
+    );
     return res.data;
   } catch (err) {
     console.error("Lỗi khi tìm kiếm:", err);
@@ -101,7 +110,9 @@ export const fetchhintAnime = async (searchTerm: string) => {
 
 export const fetchGenres = async () => {
   try {
-    const response = await axios.get("http://localhost:5000/api/anime/genre");
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/genre`
+    );
     return response.data; // [{ genre_id: 1, name: "Action" }, ...]
   } catch (error) {
     console.error("Error fetching genres:", error);
@@ -112,7 +123,9 @@ export const fetchGenres = async () => {
 export const fetchAnimeByGenres = async (genreIds: number[]) => {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/anime/by-genres?genres=${genreIds.join(",")}`
+      `${
+        process.env.NEXT_PUBLIC_API_URL
+      }/api/anime/by-genres?genres=${genreIds.join(",")}`
     );
     return response.data; // là mảng anime
   } catch (error) {
@@ -123,7 +136,9 @@ export const fetchAnimeByGenres = async (genreIds: number[]) => {
 
 export const importAnime = async () => {
   try {
-    const res = await axios.get("http://localhost:5000/api/anime/import-anime");
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/import-anime`
+    );
     console.log("Dữ liệu backend:", res);
     return res.data;
   } catch (error) {
@@ -134,7 +149,9 @@ export const importAnime = async () => {
 
 export const fetchAnimeById = async (id: number) => {
   try {
-    const response = await axios.get(`http://localhost:5000/api/anime/${id}`);
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/${id}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching anime by id:", error);
@@ -145,7 +162,7 @@ export const fetchAnimeById = async (id: number) => {
 export const fetchTrailerByAnimeId = async (id: number) => {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/anime/${id}/trailer`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/${id}/trailer`
     );
     return response.data;
   } catch (error) {
@@ -162,7 +179,7 @@ interface UpdateAnimePayload {
 export const updateAnimeById = async (id: number, data: UpdateAnimePayload) => {
   try {
     const response = await axios.put(
-      `http://localhost:5000/api/anime/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/${id}`,
       data
     );
     return response.data;
@@ -175,7 +192,7 @@ export const updateAnimeById = async (id: number, data: UpdateAnimePayload) => {
 export const fetchFavoAnime = async (user_id: number) => {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/anime/favoritelist/${user_id}`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/favoritelist/${user_id}`
     );
 
     return response.data;

@@ -30,7 +30,7 @@ export default function FavoriteF({ anime }: FavoriteFProps) {
 
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/anime/favorite/${user_id}`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/anime/favorite/${user_id}`
         );
         const favorites: { mal_id: number }[] = response.data;
         const isFav = favorites.some((item) => item.mal_id === anime.mal_id);
@@ -52,20 +52,26 @@ export default function FavoriteF({ anime }: FavoriteFProps) {
     try {
       if (isFavorite) {
         // Xoá khỏi danh sách yêu thích
-        await axios.delete("http://localhost:5000/api/anime/favorite", {
-          data: {
-            userId,
-            anime_id: anime.mal_id,
-          },
-        });
+        await axios.delete(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/anime/favorite`,
+          {
+            data: {
+              userId,
+              anime_id: anime.mal_id,
+            },
+          }
+        );
         setIsFavorite(false);
         toast.success("Đã xoá khỏi danh sách yêu thích.");
       } else {
         // Thêm vào danh sách yêu thích
-        await axios.post("http://localhost:5000/api/anime/favorite", {
-          userId,
-          anime_id: anime.mal_id,
-        });
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/anime/favorite`,
+          {
+            userId,
+            anime_id: anime.mal_id,
+          }
+        );
         setIsFavorite(true);
         toast.success("Đã thêm vào danh sách yêu thích!");
       }

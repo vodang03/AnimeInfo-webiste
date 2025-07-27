@@ -10,7 +10,9 @@ interface User {
 
 export const fetchAllUser = async () => {
   try {
-    const response = await axios.get(`http://localhost:5000/api/user/all`);
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user/all`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -18,17 +20,17 @@ export const fetchAllUser = async () => {
   }
 };
 
-export const fetchUserByID = async (id: number) => {
-  try {
-    const response = await axios.get(`http://localhost:5000/api/user/${id}`, {
-      params: { id },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    throw error;
-  }
-};
+// export const fetchUserByID = async (id: number) => {
+//   try {
+//     const response = await axios.get(`http://localhost:5000/api/user/${id}`, {
+//       params: { id },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error fetching user:", error);
+//     throw error;
+//   }
+// };
 
 export const updateUserByID = async (
   id: number,
@@ -38,7 +40,7 @@ export const updateUserByID = async (
 
   try {
     const response = await axios.put(
-      `http://localhost:5000/api/user/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user/${id}`,
       updatedData
     );
     return response;
@@ -117,20 +119,27 @@ export const fetchCurrentUser = async () => {
 };
 
 export const fetchAllAvatar = async () => {
-  const res = await axios.get("http://localhost:5000/api/user/avatar");
+  const res = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/user/avatar`
+  );
   return res.data;
 };
 
 export const confirmUserGenre = async (user_id: number, genres: number[]) => {
-  const res = await axios.post("http://localhost:5000/api/user/genre", {
-    user_id,
-    genres,
-  });
+  const res = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/user/genre`,
+    {
+      user_id,
+      genres,
+    }
+  );
   return res;
 };
 
 export const fetchGenreByUserID = async (id: number) => {
-  const res = await axios.get(`http://localhost:5000/api/user/genre/${id}`);
+  const res = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/user/genre/${id}`
+  );
   return res.data;
 };
 
@@ -139,22 +148,30 @@ export const addComment = async (
   user_id: number,
   comment: string
 ) => {
-  const res = await axios.post("http://localhost:5000/api/user/comment", {
-    anime_id,
-    user_id,
-    comment,
-  });
+  const res = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/user/comment`,
+    {
+      anime_id,
+      user_id,
+      comment,
+    }
+  );
   return res;
 };
 
 export const getComment = async (anime_id: number) => {
-  const res = await axios.get("http://localhost:5000/api/user/comment", {
-    params: { anime_id },
-  });
+  const res = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/user/comment`,
+    {
+      params: { anime_id },
+    }
+  );
   return res.data;
 };
 
 export const delAccount = async (user_id: number) => {
-  const res = await axios.delete(`http://localhost:5000/api/user/${user_id}`);
+  const res = await axios.delete(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/user/${user_id}`
+  );
   return res;
 };
