@@ -72,6 +72,10 @@ exports.loginAcc = async (req, res) => {
         .json({ message: "Email hoặc tên đăng nhập không tồn tại." });
     }
 
+    if (user.is_locked) {
+      return res.status(403).json({ message: "Tài khoản đã bị khoá." });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) {
       return res.status(401).json({ message: "Mật khẩu không chính xác." });
@@ -115,7 +119,6 @@ exports.loginAcc = async (req, res) => {
 
 // ✅ Đăng xuất
 exports.logoutAcc = (req, res) => {
-  console.log("Được gọi tới");
   res.clearCookie("token", {
     httpOnly: true,
     secure: true, // giống với khi set cookie
