@@ -126,8 +126,6 @@ exports.logoutAcc = (req, res) => {
 
 // ✅ Lấy người dùng hiện tại
 exports.getCurrentUser = async (req, res) => {
-  console.log("Được gọi tới");
-
   try {
     const user = await User.findByPk(req.user.id, {
       include: [
