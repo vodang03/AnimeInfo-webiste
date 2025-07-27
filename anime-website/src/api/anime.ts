@@ -52,6 +52,7 @@ export const fetchSeasonalAnime = async (season: string, year: number) => {
       `https://magnificent-manifestation-production-9563.up.railway.app/api/anime/seasonal`,
       {
         params: { season, year },
+        withCredentials: true,
         // headers: {
         //   "ngrok-skip-browser-warning": "69420",
         // },
