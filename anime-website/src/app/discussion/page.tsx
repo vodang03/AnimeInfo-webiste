@@ -11,9 +11,10 @@ import {
   joinDiscussionRoom,
 } from "@/api/discussion";
 import { PlusCircle } from "lucide-react"; // Cần icon pack lucide-react
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useUser } from "@/contexts/UserContext";
+import ChatBox from "@/components/ChatBox";
 
 interface Conversation {
   id: number;
@@ -44,11 +45,11 @@ export default function DiscussionRoomList() {
   const [showModal, setShowModal] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
-  const router = useRouter();
+  const [selectedRoom, setSelectedRoom] = useState<Conversation | null>(null);
+
+  const [allRooms, setAllRooms] = useState<Conversation[]>([]);
 
   const { user } = useUser();
-
-  console.log("User ở thời điểm hiện tại: ", user);
 
   const getCurrentUserId = () => {
     try {
@@ -80,7 +81,8 @@ export default function DiscussionRoomList() {
     const hasJoined = ids.includes(currentUserId);
 
     if (isOwner || hasJoined) {
-      router.push(`/discussion/${room.id}`); // Chuyển thẳng vào phòng
+      setSelectedRoom(room); // ✅ set phòng được chọn
+      setSelectedRoomId(room.id);
     } else {
       setSelectedRoomId(room.id);
       setShowJoinModal(true);
@@ -147,9 +149,13 @@ export default function DiscussionRoomList() {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const data: DiscussionRoomFromAPI[] = await fetchDiscussionRooms();
-        setConversations(
-          data.map((room) => ({
+        const currentUserId = user?.user.user_id;
+        if (!currentUserId) return;
+
+        const allRooms: DiscussionRoomFromAPI[] = await fetchDiscussionRooms();
+
+        setAllRooms(
+          allRooms.map((room) => ({
             id: room.id,
             create_user: room.User.username,
             create_user_id: room.create_user_id,
@@ -158,53 +164,140 @@ export default function DiscussionRoomList() {
             nowMember: room.now_member,
           }))
         );
+
+        const userRooms: Conversation[] = [];
+
+        for (const room of allRooms) {
+          const isOwner = room.create_user_id === currentUserId;
+
+          if (isOwner) {
+            userRooms.push({
+              id: room.id,
+              title: room.title,
+              create_user_id: room.create_user_id,
+              create_user: room.User.username,
+              maxMember: room.max_member,
+              nowMember: room.now_member,
+            });
+            continue; // bỏ qua kiểm tra thành viên nếu đã là chủ phòng
+          }
+
+          // kiểm tra thành viên
+          const members: MemberFromAPI[] = await fetchRoomMembers(room.id);
+          const memberIds = members.map((m) => m.user_id);
+
+          if (memberIds.includes(currentUserId)) {
+            userRooms.push({
+              id: room.id,
+              title: room.title,
+              create_user_id: room.create_user_id,
+              create_user: room.User.username,
+              maxMember: room.max_member,
+              nowMember: room.now_member,
+            });
+          }
+        }
+
+        setConversations(userRooms);
       } catch (error) {
         console.error("Lỗi khi lấy danh sách phòng:", error);
       }
     };
 
     fetchRooms();
-  }, []);
+  }, [user]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-cyan-100 px-6 py-8 text-gray-900">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">💬 Phòng Thảo Luận</h1>
-        <button
-          onClick={handleOpenCreateModal}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition"
+    <div className="min-h-screen bg-gray-100 flex">
+      {/* Sidebar trái */}
+      <div className="w-[300px] bg-white shadow-md border-r flex flex-col">
+        <div
+          className="p-4 border-b flex justify-between items-center hover:cursor-pointer"
+          onClick={() => {
+            setSelectedRoom(null);
+            setSelectedRoomId(null);
+          }}
         >
-          <PlusCircle className="w-5 h-5" />
-          <span>Tạo Phòng</span>
-        </button>
-      </div>
+          <h2 className="text-lg font-bold">Khám phá tất cả phòng</h2>
+        </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {conversations.map((conv) => (
-          <div
-            key={conv.id}
-            onClick={() => handleClickConversation(conv)}
-            className="cursor-pointer group p-5 rounded-2xl bg-white shadow-md hover:shadow-xl hover:scale-[1.02] transition-transform"
+        <div className="p-4 border-b flex justify-between items-center">
+          <h2 className="text-lg font-bold">Phòng đã tham gia</h2>
+          <button
+            onClick={() => handleOpenCreateModal()}
+            className="text-blue-600 hover:text-blue-800 transition"
+            title="Tạo phòng"
           >
-            <div className="flex items-center gap-3 mb-2">
-              <h2 className="text-lg font-semibold group-hover:text-blue-700">
-                {conv.title}
-              </h2>
+            <PlusCircle className="w-6 h-6" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto">
+          {conversations.map((conv) => (
+            <div
+              key={conv.id}
+              onClick={() => handleClickConversation(conv)}
+              className={`cursor-pointer px-4 py-3 border-b hover:bg-blue-50 transition ${
+                selectedRoomId === conv.id ? "bg-blue-100 font-semibold" : ""
+              }`}
+            >
+              <div className="text-sm">{conv.title}</div>
+              <div className="text-xs text-gray-500">
+                👤 {conv.create_user} • 👥 {conv.nowMember}/{conv.maxMember}
+              </div>
             </div>
-            <p className="text-sm text-gray-600">
-              👤 Người tạo:{" "}
-              <span className="font-medium">{conv.create_user}</span>
-            </p>
-            <p className="text-sm text-gray-600">
-              👥 Thành viên:{" "}
-              <span className="font-medium">
-                {conv.nowMember}/{conv.maxMember}
-              </span>
-            </p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
+      {/* Nội dung phải */}
+      <div className="flex-1 p-6">
+        {selectedRoom ? (
+          <>
+            <div className="mb-4">
+              <h1 className="text-2xl font-bold mb-1">{selectedRoom.title}</h1>
+              <p className="text-sm text-gray-600">
+                Người tạo: {selectedRoom.create_user} • Thành viên:{" "}
+                {selectedRoom.nowMember}/{selectedRoom.maxMember}
+              </p>
+            </div>
+            <div className="h-[85vh]">
+              <ChatBox roomId={selectedRoom.id} />
+            </div>
+          </>
+        ) : (
+          <div>
+            <h1 className="text-3xl font-bold mb-4  ">Khám phá tất cả phòng</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {allRooms.map((conv) => (
+                <div
+                  key={conv.id}
+                  onClick={() => handleClickConversation(conv)}
+                  className="cursor-pointer group p-5 rounded-2xl bg-white shadow-md hover:shadow-xl hover:scale-[1.02] transition-transform"
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <h2 className="text-lg font-semibold group-hover:text-blue-700">
+                      {conv.title}
+                    </h2>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    👤 Người tạo:{" "}
+                    <span className="font-medium">{conv.create_user}</span>
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    👥 Thành viên:{" "}
+                    <span className="font-medium">
+                      {conv.nowMember}/{conv.maxMember}
+                    </span>
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Modal tạo phòng */}
       {showModal && (
         <CreateRoomModal
           onClose={() => setShowModal(false)}
@@ -212,6 +305,7 @@ export default function DiscussionRoomList() {
         />
       )}
 
+      {/* Modal tham gia phòng */}
       {showJoinModal && selectedRoomId !== null && (
         <JoinRoomModal
           roomTitle={
