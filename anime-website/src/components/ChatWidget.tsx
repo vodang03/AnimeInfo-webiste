@@ -7,6 +7,7 @@ import { Loader2, Send } from "lucide-react";
 import Link from "next/link";
 import { useUser } from "@/contexts/UserContext";
 import { toast } from "react-toastify";
+import VoiceInput from "./VoiceInput";
 
 interface Recommendation {
   mal_id: number;
@@ -37,6 +38,8 @@ export default function ChatWidget() {
 
   // Lưu lại thoại trước đó
   const [chatHistory, setChatHistory] = useState<ChatItem[]>([]);
+
+  console.log(chatHistory);
 
   const handleFetch = async () => {
     // Gọi hàm phân tích câu và trả về Object kiểu RequestParams
@@ -90,8 +93,6 @@ export default function ChatWidget() {
       }
     }, 1000); // Delay 1 giây
   };
-
-  console.log(chatHistory);
 
   return (
     <>
@@ -171,7 +172,9 @@ export default function ChatWidget() {
 
           {/* Input */}
           <div className="p-4 border-t bg-white">
-            <div className="relative">
+            <div className="relative flex">
+              <VoiceInput onChange={setUserInput} />
+
               <input
                 className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded-full shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 text-sm"
                 placeholder="Nhập yêu cầu về anime..."
@@ -181,6 +184,7 @@ export default function ChatWidget() {
                   if (e.key === "Enter") handleFetch();
                 }}
               />
+
               <button
                 onClick={handleFetch}
                 disabled={isLoading}
