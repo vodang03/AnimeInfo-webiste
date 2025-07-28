@@ -48,6 +48,30 @@ export const fetchGenreAnimeSearch = async (genre?: string) => {
   }
 };
 
+export const fetchThemeAnimeSearch = async (theme?: string) => {
+  try {
+    if (!theme) return [];
+
+    const params: { theme?: string } = {};
+
+    if (theme) {
+      params.theme = theme;
+    }
+
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/themesearch`,
+      {
+        params,
+      }
+    );
+
+    return response.data; // hoặc response.data.data nếu backend trả về { data: [...] }
+  } catch (error) {
+    console.error("Error searching anime:", error);
+    throw error;
+  }
+};
+
 export const fetchSeasonalAnime = async (season: string, year: number) => {
   try {
     const response = await axios.get(

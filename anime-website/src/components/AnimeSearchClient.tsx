@@ -1,7 +1,11 @@
 // src/app/(anime)/search/AnimeSearchClient.tsx
 "use client"; // Đảm bảo đây là client component
 
-import { fetchAnimeSearch, fetchGenreAnimeSearch } from "@/api/anime";
+import {
+  fetchAnimeSearch,
+  fetchGenreAnimeSearch,
+  fetchThemeAnimeSearch,
+} from "@/api/anime";
 import AnimeList from "@/components/AnimeList";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -34,6 +38,7 @@ export default function AnimeSearchClient() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q");
   const genre = searchParams.get("genre");
+  const theme = searchParams.get("theme");
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -41,31 +46,26 @@ export default function AnimeSearchClient() {
   const totalPages = Math.ceil(sortedAnimeList.length / itemsPerPage);
 
   useEffect(() => {
-    const fetchGenreData = async () => {
-      try {
-        const data = await fetchGenreAnimeSearch(genre!);
-        setAnimeList(data);
-        setCurrentPage(1);
-      } catch (error) {
-        console.error("Error fetching anime by genre:", error); // Đổi thông báo lỗi
-      }
-    };
     const fetchData = async () => {
       try {
-        const data = await fetchAnimeSearch(query!);
-        setAnimeList(data);
+        if (genre) {
+          const data = await fetchGenreAnimeSearch(genre);
+          setAnimeList(data);
+        } else if (theme) {
+          const data = await fetchThemeAnimeSearch(theme);
+          setAnimeList(data);
+        } else if (query) {
+          const data = await fetchAnimeSearch(query);
+          setAnimeList(data);
+        }
         setCurrentPage(1);
       } catch (error) {
-        console.error("Error fetching anime by query:", error); // Đổi thông báo lỗi
+        console.error("Lỗi khi tìm kiếm anime:", error);
       }
     };
 
-    if (genre) {
-      fetchGenreData();
-    } else if (query) {
-      fetchData();
-    }
-  }, [query, genre]); // Thêm query và genre vào dependency array
+    fetchData();
+  }, [query, genre, theme]); // thêm theme vào dependency array
 
   useEffect(() => {
     // Tạo bản sao để tránh thay đổi trực tiếp state ban đầu
@@ -86,7 +86,7 @@ export default function AnimeSearchClient() {
   return (
     <div className="bg-white rounded-2xl shadow-md p-6">
       <h2 className="text-indigo-800 text-2xl font-bold mb-4">
-        Kết quả tìm kiếm: {query || genre}
+        Kết quả tìm kiếm: {query || genre || theme}
       </h2>
 
       {/* Bộ lọc sắp xếp */}

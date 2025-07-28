@@ -19,6 +19,7 @@ const {
   getFavoriteAnimeByUserId,
   searchAnimeByGenre,
   getBestAnimeAllTime,
+  searchAnimeByTheme,
 } = require("../controllers/anime.controller");
 
 router.get("/", getAllAnime);
@@ -39,6 +40,7 @@ router.get("/hint", hintAnime);
 // Anime tìm kiếm
 router.get("/search", searchAnime);
 router.get("/genresearch", searchAnimeByGenre);
+router.get("/themesearch", searchAnimeByTheme);
 
 // Thêm vào Favorite
 router.post("/favorite", addFavoriteAnime);

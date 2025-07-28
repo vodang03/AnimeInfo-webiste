@@ -29,6 +29,9 @@ export default function Navbar({ onSelectAnimeOption }: NavbarProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<Anime[]>([]);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  // const [searchType, setSearchType] = useState<"title" | "genre" | "theme">(
+  //   "title"
+  // );
 
   const { user, setUser } = useUser();
 
@@ -87,10 +90,12 @@ export default function Navbar({ onSelectAnimeOption }: NavbarProps) {
     }
   };
 
-  const handleSearch = (term: string) => {
-    if (term.trim()) {
-      router.push(`/search?q=${encodeURIComponent(term.trim())}`);
-    }
+  const handleSearch = (query: string) => {
+    if (!query.trim()) return;
+
+    const encoded = encodeURIComponent(query.trim());
+
+    router.push(`/search?type=title&q=${encoded}`);
   };
 
   // Mở Chi tiết anime
@@ -123,6 +128,8 @@ export default function Navbar({ onSelectAnimeOption }: NavbarProps) {
         setIsInputFocused={setIsInputFocused}
         onSearch={handleSearch}
         onNavigate={handleNavigate}
+        // setType={setSearchType}
+        // type={searchType}
       />
 
       {/* Đăng nhập/Đăng ký hoặc Tên người dùng */}

@@ -177,12 +177,13 @@ export default function AnimeDetailClient({
                     🌟 Chủ đề:
                   </span>
                   {anime.Themes.map((theme) => (
-                    <span
+                    <Link
                       key={theme.name}
-                      className="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-xs border border-indigo-200"
+                      href={`/search?theme=${encodeURIComponent(theme.name)}`}
+                      className="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-xs border border-indigo-200 hover:bg-indigo-100 transition"
                     >
                       {theme.name}
-                    </span>
+                    </Link>
                   ))}
                 </div>
               )}

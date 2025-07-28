@@ -340,6 +340,52 @@ exports.searchAnimeByGenre = async (req, res) => {
   }
 };
 
+exports.searchAnimeByTheme = async (req, res) => {
+  console.log("Đã gọi tới");
+
+  try {
+    const { theme } = req.query;
+
+    if (!theme) {
+      return res.status(400).json({ message: "Thiếu tham số genre." });
+    }
+
+    const result = await Anime.findAll({
+      include: [
+        // Include 1: Filter anime theo genre
+        {
+          model: Theme,
+          attributes: ["name"],
+          where: {
+            name: theme,
+          },
+          through: { attributes: [] },
+          required: true, // bắt buộc phải có genre này mới lấy
+        },
+        {
+          model: Demographic,
+          attributes: ["name"],
+          through: { attributes: [] },
+        },
+      ],
+      order: [
+        [
+          literal(
+            `(popularity * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
+          ),
+          "DESC",
+        ],
+      ],
+      distinct: true,
+    });
+
+    res.json(result);
+  } catch (err) {
+    console.error("Lỗi khi tìm kiếm theo genre:", err);
+    res.status(500).json({ message: "Lỗi khi tìm kiếm anime theo genre." });
+  }
+};
+
 exports.getAnimeById = async (req, res) => {
   const animeId = req.params.id;
   // console.log(animeId);

@@ -14,6 +14,8 @@ interface SearchBarPros {
   setIsInputFocused: (value: boolean) => void;
   onSearch: (query: string) => void; // nhận hàm onSearch từ ngoài
   onNavigate: (url: string) => void; // hàm chuyển trang
+  // setType: (value: "title" | "genre" | "theme") => void;
+  // type: "title" | "genre" | "theme";
 }
 
 const SearchBar: React.FC<SearchBarPros> = ({
@@ -26,6 +28,8 @@ const SearchBar: React.FC<SearchBarPros> = ({
   setIsInputFocused,
   onSearch,
   onNavigate,
+  // setType,
+  // type,
 }) => {
   const handleSearch = (query: string) => {
     if (query.trim()) {
@@ -33,11 +37,15 @@ const SearchBar: React.FC<SearchBarPros> = ({
     }
   };
 
+  // const [searchType, setSearchType] = useState<"title" | "genre" | "theme">(
+  //   "title"
+  // );
+
   if (pathname === "/login" || pathname === "/register") return null;
 
   return (
-    <div className="relative w-72">
-      <div className="flex items-center bg-white rounded-full shadow-sm px-4 py-2 focus-within:ring-2 focus-within:ring-indigo-400 transition">
+    <div className="relative w-80">
+      <div className="flex items-center bg-white rounded-full shadow-sm px-4 py-2 focus-within:ring-2 focus-within:ring-indigo-400 transition overflow-hidden">
         <svg
           className="w-5 h-5 text-gray-400 mr-2"
           fill="none"
@@ -70,6 +78,17 @@ const SearchBar: React.FC<SearchBarPros> = ({
             setTimeout(() => setIsInputFocused(false), 300);
           }}
         />
+        {/* <select
+          value={type}
+          onChange={(e) =>
+            setType(e.target.value as "title" | "genre" | "theme")
+          }
+          className="-mr-4 -my-4 text-sm bg-gray-100 px-2 py-2 text-gray-800 focus:outline-none"
+        >
+          <option value="title">Tên</option>
+          <option value="genre">Thể loại</option>
+          <option value="theme">Chủ đề</option>
+        </select> */}
       </div>
 
       {isInputFocused && suggestions.length > 0 && (
