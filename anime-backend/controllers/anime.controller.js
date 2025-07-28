@@ -341,8 +341,6 @@ exports.searchAnimeByGenre = async (req, res) => {
 };
 
 exports.searchAnimeByTheme = async (req, res) => {
-  console.log("Đã gọi tới");
-
   try {
     const { theme } = req.query;
 
