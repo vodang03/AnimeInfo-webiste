@@ -7,6 +7,7 @@ const Favorite = require("./favorite.model");
 const Genre = require("./genre.model");
 const Licensor = require("./licensor.model");
 const Producer = require("./producer.model");
+const Rating = require("./rating.model");
 const Studio = require("./studio.model");
 const Theme = require("./theme.model");
 const User = require("./user.model");
@@ -143,6 +144,14 @@ Genre.belongsToMany(User, {
 // Quan hệ giữa user và comment
 Comment.belongsTo(User, { foreignKey: "user_id" });
 User.hasMany(Comment, { foreignKey: "user_id" });
+
+// Một người dùng có nhiều chấm điểm
+User.hasMany(Rating, { foreignKey: "user_id", onDelete: "CASCADE" });
+Rating.belongsTo(User, { foreignKey: "user_id" });
+
+// Một anime có nhiều người chấm
+Anime.hasMany(Rating, { foreignKey: "anime_id", onDelete: "CASCADE" });
+Rating.belongsTo(Anime, { foreignKey: "anime_id" });
 
 // ✅ Khai báo association
 DiscussionRoom.belongsTo(User, { foreignKey: "create_user_id" });

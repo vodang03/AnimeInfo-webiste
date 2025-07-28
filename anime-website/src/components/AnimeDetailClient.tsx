@@ -6,6 +6,9 @@ import FavoriteF from "./FavoriteF";
 import Link from "next/link";
 import genreColorMap from "@/utils/genreColorMap";
 import AnimeComment from "./AnimeComment";
+import { submitAnimeRating } from "@/api/anime";
+import { useUser } from "@/contexts/UserContext";
+import { toast } from "react-toastify";
 
 interface Anime {
   mal_id: number;
@@ -52,11 +55,35 @@ export default function AnimeDetailClient({
   anime: Anime;
   trailer: Trailer[];
 }) {
+  const { user } = useUser();
+
   const [openVideoId, setOpenVideoId] = useState<string | null>(null);
   const primaryGenre = anime.Genres?.[0]?.name ?? "Fantasy";
   const { bg, text } = genreColorMap[primaryGenre] || {
     bg: "bg-white",
     text: "text-black",
+  };
+
+  const [userScore, setUserScore] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleScoreChange = async (score: number) => {
+    setUserScore(score);
+    setIsSubmitting(true);
+
+    if (user?.user.user_id === undefined) {
+      toast.warning("Bạn cần đăng nhập để cho điểm");
+    }
+
+    try {
+      await submitAnimeRating(user!.user.user_id, anime.mal_id, score);
+      console.log("Score submitted:", score);
+      toast.success("Đã đánh giá thành công");
+    } catch (err) {
+      console.error("Lỗi khi gửi điểm:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -187,6 +214,29 @@ export default function AnimeDetailClient({
                   ))}
                 </div>
               )}
+            </div>
+
+            {/* User Rating */}
+            <div className="mt-2">
+              <label className="text-sm font-medium text-slate-700">
+                Chấm điểm:
+              </label>
+              <select
+                value={userScore ?? ""}
+                onChange={(e) => handleScoreChange(parseFloat(e.target.value))}
+                disabled={isSubmitting}
+                className="ml-2 p-1 border rounded-md text-sm"
+              >
+                <option value="">-- Điểm --</option>
+                {[...Array(10)].map((_, i) => {
+                  const value = i + 1;
+                  return (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
 
             {/* Demographics */}

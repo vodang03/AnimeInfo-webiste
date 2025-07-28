@@ -91,6 +91,28 @@ export const fetchSeasonalAnime = async (season: string, year: number) => {
   }
 };
 
+export const submitAnimeRating = async (
+  user_id: number,
+  animeId: number,
+  score: number
+) => {
+  try {
+    const response = await axios.post(
+      `http://localhost:5000/api/anime/ratings`,
+      {
+        user_id,
+        animeId,
+        score,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting rating:", error);
+    throw error;
+  }
+};
+
 export const fetchAnime = async (page: number, limit: number) => {
   try {
     const response = await axios.get(

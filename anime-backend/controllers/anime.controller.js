@@ -8,6 +8,7 @@ const Favorite = require("../models/favorite.model");
 const Licensor = require("../models/licensor.model");
 const Producer = require("../models/producer.model");
 const Studio = require("../models/studio.model");
+const Rating = require("../models/rating.model");
 
 // Hàm tạm dừng (delay)
 function sleep(ms) {
@@ -840,5 +841,61 @@ exports.updateAnimeById = async (req, res) => {
   } catch (error) {
     console.error("Lỗi khi cập nhật:", error);
     res.status(500).json({ message: "Lỗi server." });
+  }
+};
+
+exports.ratingAnime = async (req, res) => {
+  const { user_id, animeId, score } = req.body;
+
+  if (!user_id || !animeId || score == null) {
+    return res.status(400).json({ message: "Thiếu thông tin." });
+  }
+
+  try {
+    // Tạo mới hoặc cập nhật rating
+    await Rating.upsert({
+      user_id: user_id,
+      anime_id: animeId,
+      score: score,
+    });
+
+    // Tính lại điểm trung bình và số lượt chấm
+    const result = await Rating.findAndCountAll({
+      where: { anime_id: animeId },
+      attributes: [
+        [
+          Rating.sequelize.fn("AVG", Rating.sequelize.col("score")),
+          "avg_score",
+        ],
+      ],
+      raw: true,
+    });
+
+    const animeres = await Anime.findOne({
+      where: { mal_id: animeId },
+      attributes: ["score", "scored_by"],
+    });
+
+    const avgScore = parseFloat(result.rows[0].avg_score).toFixed(2);
+    const newScoredBy = result.count;
+    const currentScoredBy = animeres.dataValues.scored_by;
+
+    // Chỉ cập nhật khi có người mới chấm
+    if (newScoredBy >= currentScoredBy) {
+      await Anime.update(
+        { score: avgScore, scored_by: newScoredBy },
+        { where: { mal_id: animeId } }
+      );
+    }
+
+    res.json({
+      message: "Chấm điểm thành công",
+      averageScore: avgScore,
+      scoredBy: newScoredBy,
+      updated: newScoredBy > currentScoredBy, // tiện theo dõi frontend
+    });
+  } catch (err) {
+    console.error("Lỗi khi chấm điểm:", err);
+    res.status(500).json({ message: "Lỗi server" });
   }
 };

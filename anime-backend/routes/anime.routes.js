@@ -20,6 +20,7 @@ const {
   searchAnimeByGenre,
   getBestAnimeAllTime,
   searchAnimeByTheme,
+  ratingAnime,
 } = require("../controllers/anime.controller");
 
 router.get("/", getAllAnime);
@@ -33,6 +34,8 @@ router.get("/seasonal", getSeasonalAnime);
 
 // Route lấy anime đang lên sóng
 router.get("/airing", getAiringAnime);
+
+router.post("/ratings", ratingAnime);
 
 // Gợi ý tìm kiếm
 router.get("/hint", hintAnime);
