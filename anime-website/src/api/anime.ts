@@ -267,7 +267,7 @@ export const fetchFavoAnime = async (user_id: number) => {
 export const fetchWatchStatusAnime = async (user_id: number) => {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/anime/planninglist/${user_id}`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/planninglist/${user_id}`
     );
 
     return response.data;
