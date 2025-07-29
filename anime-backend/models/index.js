@@ -11,6 +11,8 @@ const Rating = require("./rating.model");
 const Studio = require("./studio.model");
 const Theme = require("./theme.model");
 const User = require("./user.model");
+const WatchStatus = require("./watchstatus.model");
+const WatchStatusType = require("./watchstatustype.model");
 
 // Thiết lập quan hệ n-n qua bảng anime_genre
 Anime.belongsToMany(Genre, {
@@ -152,6 +154,15 @@ Rating.belongsTo(User, { foreignKey: "user_id" });
 // Một anime có nhiều người chấm
 Anime.hasMany(Rating, { foreignKey: "anime_id", onDelete: "CASCADE" });
 Rating.belongsTo(Anime, { foreignKey: "anime_id" });
+
+// Thiết lập quan hệ cho watchstatus
+WatchStatus.belongsTo(User, { foreignKey: "user_id" });
+WatchStatus.belongsTo(Anime, { foreignKey: "anime_id" });
+WatchStatus.belongsTo(WatchStatusType, { foreignKey: "status_type_id" });
+
+User.hasMany(WatchStatus, { foreignKey: "user_id" });
+Anime.hasMany(WatchStatus, { foreignKey: "anime_id" });
+WatchStatusType.hasMany(WatchStatus, { foreignKey: "status_type_id" });
 
 // ✅ Khai báo association
 DiscussionRoom.belongsTo(User, { foreignKey: "create_user_id" });

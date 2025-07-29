@@ -113,6 +113,22 @@ export const submitAnimeRating = async (
   }
 };
 
+export const fetchAnimeRating = async (user_id: number, animeId: number) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/ratings`,
+      {
+        params: { user_id, animeId },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching rating:", error);
+    throw error;
+  }
+};
+
 export const fetchAnime = async (page: number, limit: number) => {
   try {
     const response = await axios.get(
@@ -245,5 +261,41 @@ export const fetchFavoAnime = async (user_id: number) => {
   } catch (error) {
     console.error("Lỗi khi lấy anime:", error);
     throw error;
+  }
+};
+
+export const updateWatchStatus = async (
+  user_id: number,
+  animeId: number,
+  newstatus: number
+) => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/watchstatus/`,
+      {
+        user_id,
+        animeId,
+        newstatus,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi cập nhật trạng thái xem:", error);
+  }
+};
+
+export const fetchWatchStatusAPI = async (user_id: number, animeId: number) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/watchstatus/`,
+      {
+        params: { user_id, animeId },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi lấy trạng thái xem:", error);
   }
 };

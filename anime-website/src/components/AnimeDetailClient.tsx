@@ -1,12 +1,17 @@
 "use client";
 
 import Synopsis from "@/components/SynopsisExpand";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FavoriteF from "./FavoriteF";
 import Link from "next/link";
 import genreColorMap from "@/utils/genreColorMap";
 import AnimeComment from "./AnimeComment";
-import { submitAnimeRating } from "@/api/anime";
+import {
+  fetchAnimeRating,
+  fetchWatchStatusAPI,
+  submitAnimeRating,
+  updateWatchStatus,
+} from "@/api/anime";
 import { useUser } from "@/contexts/UserContext";
 import { toast } from "react-toastify";
 
@@ -66,6 +71,7 @@ export default function AnimeDetailClient({
 
   const [userScore, setUserScore] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [watchStatus, setWatchStatus] = useState<number>(1);
 
   const handleScoreChange = async (score: number) => {
     setUserScore(score);
@@ -77,7 +83,6 @@ export default function AnimeDetailClient({
 
     try {
       await submitAnimeRating(user!.user.user_id, anime.mal_id, score);
-      console.log("Score submitted:", score);
       toast.success("Đã đánh giá thành công");
     } catch (err) {
       console.error("Lỗi khi gửi điểm:", err);
@@ -85,6 +90,46 @@ export default function AnimeDetailClient({
       setIsSubmitting(false);
     }
   };
+
+  const handleWatchStatusChange = async (newStatus: number) => {
+    if (!user) return;
+    try {
+      await updateWatchStatus(user.user.user_id, anime.mal_id, newStatus);
+      setWatchStatus(newStatus);
+      toast.success("Cập nhật trạng thái thành công");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    const fetchRating = async () => {
+      if (!user) return;
+
+      try {
+        const res = await fetchAnimeRating(user.user.user_id, anime.mal_id);
+
+        setUserScore(res.rating?.score ?? null); // 👈 dùng userScore
+      } catch (error) {
+        console.error("Lỗi khi fetch rating:", error);
+      }
+    };
+
+    const fetchWatchStatus = async () => {
+      if (!user) return;
+
+      try {
+        const res = await fetchWatchStatusAPI(user.user.user_id, anime.mal_id);
+
+        setWatchStatus(res.watchstatus.status_type_id);
+      } catch (error) {
+        console.error("Lỗi khi fetch watch status:", error);
+      }
+    };
+
+    fetchRating();
+    fetchWatchStatus();
+  }, [user, anime.mal_id]);
 
   return (
     <div className="relative rounded-xl shadow-lg">
@@ -217,26 +262,52 @@ export default function AnimeDetailClient({
             </div>
 
             {/* User Rating */}
-            <div className="mt-2">
-              <label className="text-sm font-medium text-slate-700">
-                Chấm điểm:
-              </label>
-              <select
-                value={userScore ?? ""}
-                onChange={(e) => handleScoreChange(parseFloat(e.target.value))}
-                disabled={isSubmitting}
-                className="ml-2 p-1 border rounded-md text-sm"
-              >
-                <option value="">-- Điểm --</option>
-                {[...Array(10)].map((_, i) => {
-                  const value = i + 1;
-                  return (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  );
-                })}
-              </select>
+            <div className="mt-2 flex">
+              <div>
+                <label className="text-sm font-medium text-slate-700">
+                  Đánh giá:
+                </label>
+                <select
+                  value={userScore ?? ""}
+                  onChange={(e) => {
+                    handleScoreChange(parseFloat(e.target.value));
+                    if (watchStatus === 1) {
+                      handleWatchStatusChange(3);
+                    }
+                  }}
+                  disabled={isSubmitting}
+                  className="ml-2 p-1 border rounded-md text-sm"
+                >
+                  <option value="">-- Điểm --</option>
+                  {[...Array(10)].map((_, i) => {
+                    const value = i + 1;
+                    return (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+
+              <div className="ml-2">
+                <label className="text-sm font-medium text-slate-700">
+                  Trạng thái xem:
+                </label>
+                <select
+                  value={watchStatus}
+                  onChange={(e) =>
+                    handleWatchStatusChange(Number(e.target.value))
+                  }
+                  className="ml-2 p-1 border rounded-md text-sm"
+                >
+                  <option value="1">Chưa xem</option>
+                  <option value="2">Lên kế hoạch xem</option>
+                  <option value="3">Đang xem</option>
+                  <option value="4">Đã xem</option>
+                  <option value="5">Bỏ xem</option>
+                </select>
+              </div>
             </div>
 
             {/* Demographics */}

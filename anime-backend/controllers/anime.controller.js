@@ -9,6 +9,7 @@ const Licensor = require("../models/licensor.model");
 const Producer = require("../models/producer.model");
 const Studio = require("../models/studio.model");
 const Rating = require("../models/rating.model");
+const WatchStatus = require("../models/watchstatus.model");
 
 // Hàm tạm dừng (delay)
 function sleep(ms) {
@@ -893,6 +894,77 @@ exports.ratingAnime = async (req, res) => {
       averageScore: avgScore,
       scoredBy: newScoredBy,
       updated: newScoredBy > currentScoredBy, // tiện theo dõi frontend
+    });
+  } catch (err) {
+    console.error("Lỗi khi chấm điểm:", err);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+exports.updateWatchStatus = async (req, res) => {
+  const { user_id, animeId, newstatus } = req.body;
+
+  if (!user_id || !animeId || !newstatus) {
+    return res.status(400).json({ message: "Thiếu thông tin." });
+  }
+
+  try {
+    // Tạo mới hoặc cập nhật trạng thái xem
+    await WatchStatus.upsert({
+      user_id: user_id,
+      anime_id: animeId,
+      status_type_id: newstatus,
+      updated_at: new Date(),
+    });
+
+    res.status(200).json({
+      message: "Cập nhật trạng thái xem thành công",
+    });
+  } catch (err) {
+    console.error("Lỗi khi upsert trạng thái:", err);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+exports.getWatchStatus = async (req, res) => {
+  const { user_id, animeId } = req.query;
+
+  if (!user_id || !animeId) {
+    return res.status(400).json({ message: "Thiếu thông tin." });
+  }
+
+  try {
+    // Tạo mới hoặc cập nhật trạng thái xem
+    const result = await WatchStatus.findOne({
+      where: { user_id: user_id, anime_id: animeId },
+    });
+
+    res.status(200).json({
+      message: "Lấy trạng thái xem thành công",
+      watchstatus: result,
+    });
+  } catch (err) {
+    console.error("Lỗi khi lấy trạng thái:", err);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+exports.getRatingAnime = async (req, res) => {
+  const { user_id, animeId } = req.query;
+
+  if (!user_id || !animeId) {
+    return res.status(400).json({ message: "Thiếu thông tin." });
+  }
+
+  try {
+    // Tính lại điểm trung bình và số lượt chấm
+    const result = await Rating.findOne({
+      where: { anime_id: animeId, user_id: user_id },
+    });
+
+    res.status(200).json({
+      message: "Lấy điểm thành công",
+      rating: result,
     });
   } catch (err) {
     console.error("Lỗi khi chấm điểm:", err);

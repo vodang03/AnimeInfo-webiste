@@ -21,6 +21,9 @@ const {
   getBestAnimeAllTime,
   searchAnimeByTheme,
   ratingAnime,
+  getRatingAnime,
+  updateWatchStatus,
+  getWatchStatus,
 } = require("../controllers/anime.controller");
 
 router.get("/", getAllAnime);
@@ -35,7 +38,13 @@ router.get("/seasonal", getSeasonalAnime);
 // Route lấy anime đang lên sóng
 router.get("/airing", getAiringAnime);
 
+// Chấm điểm
 router.post("/ratings", ratingAnime);
+router.get("/ratings", getRatingAnime);
+
+// Trạng thái xem
+router.post("/watchstatus", updateWatchStatus);
+router.get("/watchstatus", getWatchStatus);
 
 // Gợi ý tìm kiếm
 router.get("/hint", hintAnime);
