@@ -76,7 +76,7 @@ export default function ChatBox({ roomId }: { roomId: number }) {
 
   return (
     <div className="h-full bg-white flex flex-col rounded-xl border">
-      <div className="flex-1 p-4 overflow-y-auto">
+      <div className="flex-1 p-4 pb-10 overflow-y-auto">
         {messages.map((msg) => (
           <ChatMessage key={msg.id} {...msg} />
         ))}
