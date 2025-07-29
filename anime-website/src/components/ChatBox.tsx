@@ -11,6 +11,7 @@ interface Message {
   id: number;
   isSender: boolean;
   message: string;
+  username: string;
   avatarUrl: string;
   roomId?: number;
   userId?: number;
@@ -64,7 +65,8 @@ export default function ChatBox({ roomId }: { roomId: number }) {
       id: result.id,
       isSender: true,
       message: text,
-      avatarUrl: "/avatar2.png",
+      username: user!.user.username,
+      avatarUrl: user!.user.avatar_url,
       roomId,
       userId: currentUserId,
     };

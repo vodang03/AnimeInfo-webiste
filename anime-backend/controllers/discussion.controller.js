@@ -131,14 +131,10 @@ exports.createMessage = async (req, res) => {
   }
 };
 
-// Lấy tất cả tin nhắn trong một phòng
 exports.getMessagesByRoom = async (req, res) => {
   try {
     const roomId = req.params.roomId;
     const currentUserId = req.query.userId;
-
-    console.log(roomId);
-    console.log(currentUserId);
 
     if (!roomId || !currentUserId) {
       return res.status(400).json({ message: "Missing roomId or userId" });
@@ -147,15 +143,21 @@ exports.getMessagesByRoom = async (req, res) => {
     const messages = await DiscussionRoomMessage.findAll({
       where: { room_id: roomId },
       order: [["created_at", "ASC"]],
-      raw: true,
+      include: [
+        {
+          model: User,
+          attributes: ["avatar_url", "username"],
+        },
+      ],
     });
 
     const enhancedMessages = messages.map((msg) => ({
       id: msg.id,
       userId: msg.user_id,
       message: msg.message,
+      username: msg.User.username,
       file: msg.file_url,
-      avatarUrl: "/avatar2.png", // có thể thay bằng msg.avatar nếu có join bảng User
+      avatarUrl: msg.User?.avatar_url,
       isSender: msg.user_id === Number(currentUserId),
     }));
 

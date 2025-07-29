@@ -46,6 +46,7 @@ export const fetchMessages = async (roomId: number, userId: number) => {
     `${process.env.NEXT_PUBLIC_API_URL}/api/discussion/messages/${roomId}`,
     { params: { userId: userId } }
   );
+
   return res.data;
 };
 

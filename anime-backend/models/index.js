@@ -3,6 +3,7 @@ const Comment = require("./comment.model");
 const Demographic = require("./demographic.model");
 const DiscussionRoom = require("./discussionroom.model");
 const DiscussionRoomMember = require("./discussionroommember.model");
+const DiscussionRoomMessage = require("./discussionroommessage.model");
 const Favorite = require("./favorite.model");
 const Genre = require("./genre.model");
 const Licensor = require("./licensor.model");
@@ -167,6 +168,9 @@ WatchStatusType.hasMany(WatchStatus, { foreignKey: "status_type_id" });
 // ✅ Khai báo association
 DiscussionRoom.belongsTo(User, { foreignKey: "create_user_id" });
 User.hasMany(DiscussionRoom, { foreignKey: "create_user_id" });
+
+DiscussionRoomMessage.belongsTo(User, { foreignKey: "user_id" });
+User.hasMany(DiscussionRoomMessage, { foreignKey: "user_id" });
 
 DiscussionRoomMember.belongsTo(User, { foreignKey: "user_id" });
 DiscussionRoomMember.belongsTo(DiscussionRoom, {
