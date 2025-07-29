@@ -527,6 +527,32 @@ exports.getFavoriteAnimeByUserId = async (req, res) => {
   }
 };
 
+exports.getWatchStatusAnimeByUserId = async (req, res) => {
+  const userId = req.params.userId;
+
+  if (!userId) {
+    return res.status(400).json({ message: "Thiếu userId" });
+  }
+
+  try {
+    // Lấy danh sách favorite theo userId, bao gồm thông tin anime (join bảng anime)
+    const favorites = await WatchStatus.findAll({
+      where: { user_id: userId },
+      include: [
+        {
+          model: Anime,
+          attributes: ["mal_id", "title", "image_url"],
+        },
+      ],
+    });
+
+    return res.status(200).json({ favorites: favorites });
+  } catch (err) {
+    console.error("❌ Lỗi khi lấy danh sách kế hoạch xem:", err);
+    return res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+};
+
 exports.removeFavoriteAnime = async (req, res) => {
   const { userId, anime_id } = req.body;
 

@@ -264,6 +264,19 @@ export const fetchFavoAnime = async (user_id: number) => {
   }
 };
 
+export const fetchWatchStatusAnime = async (user_id: number) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:5000/api/anime/planninglist/${user_id}`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi lấy anime planning:", error);
+    throw error;
+  }
+};
+
 export const updateWatchStatus = async (
   user_id: number,
   animeId: number,

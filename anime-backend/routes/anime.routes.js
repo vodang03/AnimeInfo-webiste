@@ -24,6 +24,7 @@ const {
   getRatingAnime,
   updateWatchStatus,
   getWatchStatus,
+  getWatchStatusAnimeByUserId,
 } = require("../controllers/anime.controller");
 
 router.get("/", getAllAnime);
@@ -60,7 +61,8 @@ router.delete("/favorite", removeFavoriteAnime);
 router.get("/favorite/:id", getFavoritesByUserId);
 router.get("/favoritelist/:userId", getFavoriteAnimeByUserId);
 
-// Xoá Anime Favorite
+// Lấy danh sách planning
+router.get("/planninglist/:userId", getWatchStatusAnimeByUserId);
 
 // Lấy tất cả genre anime
 router.get("/genre", getAllGenres);
