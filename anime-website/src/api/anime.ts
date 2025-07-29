@@ -98,7 +98,7 @@ export const submitAnimeRating = async (
 ) => {
   try {
     const response = await axios.post(
-      `http://localhost:5000/api/anime/ratings`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/ratings`,
       {
         user_id,
         animeId,
