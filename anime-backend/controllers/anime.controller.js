@@ -16,6 +16,8 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+const sensitiveGenres = ["Hentai", "Ecchi", "Yaoi", "Yuri", "Josei"];
+
 exports.getAllAnime = async (req, res) => {
   try {
     // Lấy page và limit từ query, mặc định nếu không có thì là 1 và 20
@@ -47,10 +49,15 @@ exports.getAllAnime = async (req, res) => {
       offset,
     });
 
+    const filteredRows = rows.filter((anime) => {
+      const genreNames = anime.Genres.map((genre) => genre.name);
+      return !genreNames.some((name) => sensitiveGenres.includes(name));
+    });
+
     // Trả về JSON
     res.json({
-      data: rows,
-      total: count, // Tổng số anime
+      data: filteredRows,
+      total: filteredRows.length, // Tổng số anime
     });
   } catch (err) {
     console.error("Lỗi server:", err);
@@ -101,10 +108,15 @@ exports.getBestAnime = async (req, res) => {
       offset,
     });
 
+    const filteredRows = rows.filter((anime) => {
+      const genreNames = anime.Genres.map((genre) => genre.name);
+      return !genreNames.some((name) => sensitiveGenres.includes(name));
+    });
+
     // Trả về JSON
     res.json({
-      data: rows,
-      total: count, // Tổng số anime
+      data: filteredRows,
+      total: filteredRows.length, // Tổng số anime
     });
   } catch (err) {
     console.error("Lỗi server:", err);
@@ -231,12 +243,15 @@ exports.getAiringAnime = async (req, res) => {
       offset,
     });
 
-    // console.log(rows, count);
+    const filteredRows = rows.filter((anime) => {
+      const genreNames = anime.Genres.map((genre) => genre.name);
+      return !genreNames.some((name) => sensitiveGenres.includes(name));
+    });
 
     // Trả về JSON
     res.json({
-      data: rows,
-      total: count, // Tổng số anime
+      data: filteredRows,
+      total: filteredRows.length, // Tổng số anime
     });
   } catch (err) {
     console.error("Lỗi khi lấy airing anime:", err);
