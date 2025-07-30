@@ -64,6 +64,9 @@ export default function DiscussionRoomList() {
   // Xử lý khi ấn chọn phòng
   const handleClickConversation = async (conv: Conversation) => {
     const room = conv;
+
+    console.log(room);
+
     if (!room) return;
 
     const currentUserId = getCurrentUserId();
@@ -72,6 +75,8 @@ export default function DiscussionRoomList() {
       toast.warning("Bạn cần đăng nhập để tham gia phòng thảo luận!");
       return;
     }
+
+    const isFull = room.maxMember === room.nowMember;
 
     // Kiểm tra có phải chủ phòng
     const isOwner = room.create_user_id === currentUserId;
@@ -85,6 +90,10 @@ export default function DiscussionRoomList() {
       setSelectedRoomId(room.id);
     } else {
       setSelectedRoomId(room.id);
+      if (isFull) {
+        toast.warning("Phòng đã đủ người. Bạn không thể tham gia");
+        return;
+      }
       setShowJoinModal(true);
     }
   };
