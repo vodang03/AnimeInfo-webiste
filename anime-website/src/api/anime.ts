@@ -10,12 +10,9 @@ export const fetchAnimeSearch = async (query?: string) => {
       params.q = query;
     }
 
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/search`,
-      {
-        params,
-      }
-    );
+    const response = await axios.get(`http://localhost:5000/api/anime/search`, {
+      params,
+    });
 
     return response.data; // hoặc response.data.data nếu backend trả về { data: [...] }
   } catch (error) {
@@ -158,12 +155,9 @@ export const fetchAnime = async (page: number, limit: number) => {
 
 export const fetchhintAnime = async (searchTerm: string) => {
   try {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/hint`,
-      {
-        params: { q: searchTerm },
-      }
-    );
+    const res = await axios.get(`http://localhost:5000/api/anime/hint`, {
+      params: { q: searchTerm },
+    });
     return res.data;
   } catch (err) {
     console.error("Lỗi khi tìm kiếm:", err);

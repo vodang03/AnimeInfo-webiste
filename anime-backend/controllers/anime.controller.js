@@ -264,6 +264,15 @@ exports.hintAnime = async (req, res) => {
   try {
     const query = req.query.q || "";
     const result = await Anime.findAll({
+      distinct: true, //Vì gặp lỗi đếm nhiều lần cùng 1 bộ vì có các bảng nhiều nhiều
+      include: [
+        {
+          model: Genre,
+          attributes: ["name"], // lấy tên thể loại
+          through: { attributes: [] }, // bỏ thông tin bảng trung gian
+        },
+      ],
+
       where: {
         title: { [Op.like]: `%${query}%` },
       },
@@ -279,7 +288,7 @@ exports.hintAnime = async (req, res) => {
       ],
 
       limit: 10, // chỉ lấy 10 kết quả gợi ý
-      attributes: ["title", "mal_id", "image_url"], // hoặc thêm ảnh, id gì đó nếu cần
+      // attributes: ["title", "mal_id", "image_url"], // hoặc thêm ảnh, id gì đó nếu cần
     });
 
     const filteredRows = result.filter((anime) => {
@@ -299,6 +308,13 @@ exports.searchAnime = async (req, res) => {
     const { q } = req.query;
 
     const result = await Anime.findAll({
+      include: [
+        {
+          model: Genre,
+          attributes: ["name"], // lấy tên thể loại
+          through: { attributes: [] }, // bỏ thông tin bảng trung gian
+        },
+      ],
       where: {
         title: { [Op.like]: `%${q}%` },
       },
