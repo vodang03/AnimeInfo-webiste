@@ -26,7 +26,7 @@ export default function RegisterPage() {
 
     try {
       await registerUser(username, email, password, birthDate);
-
+      router.push("/login");
       toast.success("Đăng ký thành công!");
     } catch (err) {
       toast.error("Đăng ký thất bại. Vui lòng thử lại.");
