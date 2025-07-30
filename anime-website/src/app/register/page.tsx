@@ -1,18 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import BirthDatePicker from "@/components/BirthDatePicker";
-import { fetchGenres } from "@/api/anime";
 import { toast } from "react-toastify";
-import genreColorMap from "@/utils/genreColorMap";
 import { registerUser } from "@/api/user";
-
-interface Genre {
-  genre_id: number;
-  name: string;
-}
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -22,49 +14,6 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  const [showGenreModal, setShowGenreModal] = useState(false);
-  const [newUserId, setNewUserId] = useState<number | null>(null); // từ backend trả về
-  const [genreList, setGenreList] = useState<Genre[]>([]);
-
-  const getGenreColor = (name: string) => {
-    return genreColorMap[name] || { bg: "bg-gray-200", text: "text-gray-800" };
-  };
-
-  const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
-
-  // Chọn thể loại bạn thích
-  const toggleGenre = (genreId: number) => {
-    if (selectedGenres.includes(genreId)) {
-      setSelectedGenres(selectedGenres.filter((id) => id !== genreId));
-    } else {
-      if (selectedGenres.length >= 3) {
-        toast.error("Bạn chỉ được chọn tối đa 3 thể loại.");
-        return;
-      }
-      setSelectedGenres([...selectedGenres, genreId]);
-    }
-  };
-
-  const handleConfirmGenres = async () => {
-    if (selectedGenres.length === 0) {
-      toast.error("Bạn chưa chọn thể loại nào!");
-      return;
-    }
-
-    try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/user/genre`, {
-        user_id: newUserId, // hoặc user id bạn lấy từ response đăng ký
-        genres: selectedGenres,
-      });
-      toast.success("Lưu thể loại thành công!");
-      setShowGenreModal(false);
-      router.push("/login");
-    } catch (error) {
-      console.error("Lỗi lưu thể loại:", error);
-      toast.error("Lưu thể loại thất bại!");
-    }
-  };
 
   // Xử lý đăng ký
   const handleRegister = async (e: React.FormEvent) => {
@@ -76,32 +25,14 @@ export default function RegisterPage() {
     }
 
     try {
-      const { userId } = await registerUser(
-        username,
-        email,
-        password,
-        birthDate
-      );
-      setNewUserId(userId);
-      setShowGenreModal(true);
+      await registerUser(username, email, password, birthDate);
+
       toast.success("Đăng ký thành công!");
     } catch (err) {
       toast.error("Đăng ký thất bại. Vui lòng thử lại.");
       console.log(err);
     }
   };
-
-  useEffect(() => {
-    const loadGenres = async () => {
-      try {
-        const genres = await fetchGenres();
-        setGenreList(genres);
-      } catch (err) {
-        console.error("Không thể tải danh sách thể loại:", err);
-      }
-    };
-    loadGenres();
-  }, []);
 
   return (
     <div className="relative w-full h-screen">
@@ -196,49 +127,6 @@ export default function RegisterPage() {
           </p>
         </div>
       </div>
-
-      {/* Modal chọn genre yêu thích */}
-      {showGenreModal && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
-          <div className="bg-white p-8 rounded-2xl shadow-2xl w-[90%] max-w-lg max-h-[80vh] overflow-y-auto">
-            <h3 className="text-2xl font-bold mb-6">
-              Chọn thể loại bạn yêu thích{" "}
-              <span className="text-sm">(tối đa 3)</span>
-            </h3>
-
-            <div className="flex flex-wrap gap-3 ">
-              {genreList.map((genre) => {
-                const isSelected = selectedGenres.includes(genre.genre_id);
-                const colors = getGenreColor(genre.name);
-
-                return (
-                  <button
-                    key={genre.genre_id}
-                    type="button"
-                    onClick={() => toggleGenre(genre.genre_id)}
-                    className={`px-5 py-2 rounded-full font-semibold border shadow-sm transform transition-all duration-150
-              ${
-                isSelected
-                  ? `${colors.bg} ${colors.text} scale-105`
-                  : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-              }
-            `}
-                  >
-                    {genre.name}
-                  </button>
-                );
-              })}
-            </div>
-
-            <button
-              className="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition"
-              onClick={() => handleConfirmGenres()}
-            >
-              Xác nhận
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
