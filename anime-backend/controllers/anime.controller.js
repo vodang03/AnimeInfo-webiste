@@ -49,15 +49,10 @@ exports.getAllAnime = async (req, res) => {
       offset,
     });
 
-    const filteredRows = rows.filter((anime) => {
-      const genreNames = anime.Genres.map((genre) => genre.name);
-      return !genreNames.some((name) => sensitiveGenres.includes(name));
-    });
-
     // Trả về JSON
     res.json({
-      data: filteredRows,
-      total: filteredRows.length, // Tổng số anime
+      data: rows,
+      total: count, // Tổng số anime
     });
   } catch (err) {
     console.error("Lỗi server:", err);
@@ -116,7 +111,7 @@ exports.getBestAnime = async (req, res) => {
     // Trả về JSON
     res.json({
       data: filteredRows,
-      total: filteredRows.length, // Tổng số anime
+      total: count, // Tổng số anime
     });
   } catch (err) {
     console.error("Lỗi server:", err);
@@ -155,9 +150,15 @@ exports.getBestAnimeAllTime = async (req, res) => {
       offset,
     });
 
+    // Lọc bỏ genre nhạy cảm hàm filter sẽ giữ lại những giá trị true
+    const filteredRows = rows.filter((anime) => {
+      const genreNames = anime.Genres.map((genre) => genre.name);
+      return !genreNames.some((name) => sensitiveGenres.includes(name));
+    });
+
     // Trả về JSON
     res.json({
-      data: rows,
+      data: filteredRows,
       total: count, // Tổng số anime
     });
   } catch (err) {
@@ -251,7 +252,7 @@ exports.getAiringAnime = async (req, res) => {
     // Trả về JSON
     res.json({
       data: filteredRows,
-      total: filteredRows.length, // Tổng số anime
+      total: count, // Tổng số anime
     });
   } catch (err) {
     console.error("Lỗi khi lấy airing anime:", err);
@@ -281,7 +282,12 @@ exports.hintAnime = async (req, res) => {
       attributes: ["title", "mal_id", "image_url"], // hoặc thêm ảnh, id gì đó nếu cần
     });
 
-    res.json(result);
+    const filteredRows = result.filter((anime) => {
+      const genreNames = anime.Genres.map((genre) => genre.name);
+      return !genreNames.some((name) => sensitiveGenres.includes(name));
+    });
+
+    res.json(filteredRows);
   } catch (err) {
     console.error("Lỗi khi tìm kiếm:", err);
     res.status(500).json({ message: "Lỗi khi tìm kiếm anime." });
@@ -306,7 +312,13 @@ exports.searchAnime = async (req, res) => {
       ],
       distinct: true, // để tránh trùng khi join nhiều bảng
     });
-    res.json(result);
+
+    const filteredRows = result.filter((anime) => {
+      const genreNames = anime.Genres.map((genre) => genre.name);
+      return !genreNames.some((name) => sensitiveGenres.includes(name));
+    });
+
+    res.json(filteredRows);
   } catch (err) {
     console.error("Lỗi khi tìm kiếm:", err);
     res.status(500).json({ message: "Lỗi khi tìm kiếm anime." });

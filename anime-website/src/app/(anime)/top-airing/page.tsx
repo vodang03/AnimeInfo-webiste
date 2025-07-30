@@ -29,7 +29,7 @@ export default function TopAiring() {
 
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/api/anime/airing`, {
+      .get(`http://localhost:5000/api/anime/airing`, {
         params: { page: currentPage, limit: itemsPerPage },
       })
       .then((res) => {
