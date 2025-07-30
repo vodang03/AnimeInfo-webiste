@@ -48,7 +48,7 @@ export default function UserProfileForm() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const restrictedGenres = [12, 26, 28, 49]; // Thể loại cần giới hạn độ tuổi
-  const [userAge, setUserAge] = useState<number | undefined>(undefined);
+  // const [userAge, setUserAge] = useState<number | undefined>(undefined);
 
   const handleAvatarSelect = async (url: string) => {
     setFormData({ ...formData, avatar_url: url });
@@ -96,18 +96,18 @@ export default function UserProfileForm() {
     }
   };
 
-  const calculateAge = (birthday: Date) => {
-    const birthDate = new Date(birthday);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
+  // const calculateAge = (birthday: Date) => {
+  //   const birthDate = new Date(birthday);
+  //   const today = new Date();
+  //   let age = today.getFullYear() - birthDate.getFullYear();
+  //   const m = today.getMonth() - birthDate.getMonth();
 
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
+  //   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+  //     age--;
+  //   }
 
-    return age;
-  };
+  //   return age;
+  // };
 
   useEffect(() => {
     if (formData.avatar_url !== undefined && isAvatarChange === true) {
@@ -127,10 +127,10 @@ export default function UserProfileForm() {
   useEffect(() => {
     if (!user) return;
 
-    if (user?.user?.birthDate) {
-      const age = calculateAge(new Date(user.user.birthDate));
-      setUserAge(age); // dùng useState để lưu nếu muốn render lại component
-    }
+    // if (user?.user?.birthDate) {
+    //   const age = calculateAge(new Date(user.user.birthDate));
+    //   setUserAge(age); // dùng useState để lưu nếu muốn render lại component
+    // }
 
     setFormData({
       username: user.user.username,
