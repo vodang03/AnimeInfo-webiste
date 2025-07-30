@@ -150,7 +150,6 @@ export default function DiscussionRoomList() {
     const fetchRooms = async () => {
       try {
         const currentUserId = user?.user.user_id;
-        if (!currentUserId) return;
 
         const allRooms: DiscussionRoomFromAPI[] = await fetchDiscussionRooms();
 
@@ -164,6 +163,8 @@ export default function DiscussionRoomList() {
             nowMember: room.now_member,
           }))
         );
+
+        if (!currentUserId) return;
 
         const userRooms: Conversation[] = [];
 

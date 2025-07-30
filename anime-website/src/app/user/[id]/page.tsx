@@ -387,7 +387,7 @@ export default function UserProfileForm() {
               .filter(
                 (namegenre) =>
                   !(
-                    userAge! < 18 &&
+                    // userAge! < 18 &&
                     restrictedGenres.includes(namegenre.genre_id)
                   )
               )

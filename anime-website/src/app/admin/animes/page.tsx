@@ -227,7 +227,8 @@ export default function AdminAnimePage() {
         <div
           className="p-4 rounded bg-yellow-100 hover:bg-yellow-200 cursor-pointer"
           onClick={() => {
-            setShowDetail(true);
+            setShowDetail(!showDetail);
+            setAnimeDetail(undefined);
           }}
         >
           <p className="text-lg font-semibold">{animeDetail.title}</p>
@@ -331,7 +332,7 @@ export default function AdminAnimePage() {
             <textarea
               defaultValue={animeDetail.synopsis}
               name="synopsis"
-              className="w-full border rounded px-3 py-2 h-40 resize-none"
+              className="w-full border rounded px-3 py-2 h-32 resize-none"
             ></textarea>
           </div>
 
@@ -342,7 +343,7 @@ export default function AdminAnimePage() {
             <textarea
               defaultValue={animeDetail.synopsis_vn}
               name="synopsis_vn"
-              className="w-full border rounded px-3 py-2 h-40 resize-none"
+              className="w-full border rounded px-3 py-2 h-32 resize-none"
             ></textarea>
           </div>
 
