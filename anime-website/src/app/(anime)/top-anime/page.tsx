@@ -3,21 +3,7 @@
 import AnimeList from "@/components/AnimeList";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-interface Anime {
-  mal_id: number;
-  title: string;
-  type: string;
-  episodes: number;
-  status: string;
-  image_url: string;
-  score: number;
-  synopsis: string;
-  Genres: { name: string }[]; // ví dụ: ["Action", "Adventure"]
-  Demographics: { name: string }[];
-  aired_from: string;
-  aired_to: string;
-}
+import { Anime } from "../home/page";
 
 export default function TopAnime() {
   const [animeList, setAnimeList] = useState<Anime[]>([]);

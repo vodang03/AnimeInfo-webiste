@@ -10,7 +10,7 @@ import getCurrentSeasonAndYear from "@/components/GetCurrentSeason";
 import { useUser } from "@/contexts/UserContext";
 import { useEffect, useState } from "react";
 
-interface Anime {
+export interface Anime {
   mal_id: number;
   title: string;
   type: string;
