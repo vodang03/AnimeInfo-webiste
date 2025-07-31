@@ -1,22 +1,7 @@
 import genreColorMap from "@/utils/genreColorMap";
 import Link from "next/link";
 import React from "react";
-
-interface AnimeCardProps {
-  anime: {
-    mal_id: number;
-    title: string;
-    image_url: string;
-    synopsis: string;
-    score: number;
-    episodes: number;
-    status: string;
-    type: string;
-    Themes: { name: string }[];
-    Genres: { name: string }[];
-    Demographics: { name: string }[];
-  };
-}
+import { AnimeCardProps } from "./AnimeCard";
 
 const AnimeCardReverse: React.FC<AnimeCardProps> = ({ anime }) => {
   const primaryGenre = anime.Genres?.[0]?.name ?? "Fantasy";
@@ -39,7 +24,9 @@ const AnimeCardReverse: React.FC<AnimeCardProps> = ({ anime }) => {
 
       <div className="w-3/4 p-4 flex flex-col justify-between">
         <div>
-          <h2 className="text-xl font-bold text-indigo-700">{anime.title}</h2>
+          <h2 className="text-xl font-bold text-indigo-700">
+            {anime.title_vietnamese || anime.title}
+          </h2>
 
           <div className="text-sm text-gray-600 mt-2">
             <span className="mr-2">🎬 {anime.type}</span>

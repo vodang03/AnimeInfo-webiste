@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 interface Anime {
   mal_id: number;
   title: string;
+  title_vietnamese: string;
   type: string;
   episodes: number;
   status: string;
@@ -163,7 +164,7 @@ export default function AnimeDetailClient({
             <div className={`mt-3 space-y-1 text-sm ${text}`}>
               <p>
                 <span className="font-semibold">Japanese:</span>{" "}
-                {anime.title_japanese || anime.title_english}
+                {anime.title_japanese || "Unknow"}
               </p>
               <p>
                 <span className="font-semibold">Episodes:</span>{" "}
@@ -187,7 +188,7 @@ export default function AnimeDetailClient({
           <div className="flex-1">
             <div className="flex items-start justify-between">
               <h1 className="text-3xl font-bold text-indigo-800">
-                {anime.title}
+                {anime.title_vietnamese || anime.title}
               </h1>
               <div className="text-white bg-indigo-600 rounded-xl px-3 py-1 text-sm font-semibold shadow-sm">
                 ⭐ {anime.score ?? "N/A"}

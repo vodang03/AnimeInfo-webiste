@@ -2,10 +2,11 @@ import genreColorMap from "@/utils/genreColorMap";
 import Link from "next/link";
 import React from "react";
 
-interface AnimeCardProps {
+export interface AnimeCardProps {
   anime: {
     mal_id: number;
     title: string;
+    title_vietnamese: string;
     image_url: string;
     synopsis: string;
     score: number;
@@ -31,7 +32,9 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
     >
       <div className="w-2/3 p-4 flex flex-col justify-between">
         <div>
-          <h2 className="text-xl font-bold text-indigo-700">{anime.title}</h2>
+          <h2 className="text-xl font-bold text-indigo-700">
+            {anime.title_vietnamese || anime.title}
+          </h2>
 
           <div className="text-sm text-gray-600 mt-2">
             <span className="mr-2">🎬 {anime.type}</span>

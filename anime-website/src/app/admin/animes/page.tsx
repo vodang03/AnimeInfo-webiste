@@ -228,7 +228,7 @@ export default function AdminAnimePage() {
           className="p-4 rounded bg-yellow-100 hover:bg-yellow-200 cursor-pointer"
           onClick={() => {
             setShowDetail(!showDetail);
-            setAnimeDetail(undefined);
+            // setAnimeDetail(undefined);
           }}
         >
           <p className="text-lg font-semibold">{animeDetail.title}</p>

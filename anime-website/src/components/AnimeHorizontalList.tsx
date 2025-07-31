@@ -3,6 +3,7 @@ import React from "react";
 interface Anime {
   mal_id: number;
   title: string;
+  title_vietnamese: string;
   image_url: string;
 }
 
@@ -31,7 +32,7 @@ const AnimeHorizontalList: React.FC<AnimeHorizontalListProps> = ({
                 className="w-full h-64 object-cover rounded"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-transparent backdrop-blur-md text-white text-xs font-bold px-2 py-1 rounded-b">
-                {anime.title}
+                {anime.title_vietnamese || anime.title}
               </div>
             </div>
           </div>

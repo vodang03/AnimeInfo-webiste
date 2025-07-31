@@ -10,6 +10,7 @@ interface Anime {
   mal_id: number;
   title: string;
   type: string;
+  title_vietnamese: string;
   episodes: number;
   status: string;
   image_url: string;
@@ -45,7 +46,7 @@ export default function AnimeList({
             {/* Title */}
             <Link href={`/anime/${anime.mal_id}`}>
               <h3 className="font-bold text-indigo-800 text-lg hover:underline hover:text-indigo-900 cursor-pointer text-center mb-3">
-                {anime.title}
+                {anime.title_vietnamese || anime.title}
               </h3>
             </Link>
 
