@@ -159,7 +159,7 @@ exports.getBestAnimeAllTime = async (req, res) => {
     // Trả về JSON
     res.json({
       data: filteredRows,
-      total: count, // Tổng số anime
+      total: 100, // Tổng số anime
     });
   } catch (err) {
     console.error("Lỗi server:", err);
