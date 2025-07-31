@@ -3,20 +3,7 @@
 import { useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import AnimeCard from "./AnimeCard";
-
-interface Anime {
-  mal_id: number;
-  title: string;
-  type: string;
-  episodes: number;
-  status: string;
-  image_url: string;
-  score: number;
-  synopsis: string;
-  Themes: { name: string }[];
-  Genres: { name: string }[];
-  Demographics: { name: string }[];
-}
+import { Anime } from "@/app/(anime)/home/page";
 
 interface Props {
   animeList: Anime[];
