@@ -1,24 +1,10 @@
 "use client";
 
 import { fetchSeasonalAnime } from "@/api/anime";
+import { Anime } from "@/app/(anime)/home/page";
 import AnimeList from "@/components/AnimeList";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
-interface Anime {
-  mal_id: number;
-  title: string;
-  type: string;
-  episodes: number;
-  status: string;
-  image_url: string;
-  score: number;
-  synopsis: string;
-  Genres: { name: string }[]; // ví dụ: ["Action", "Adventure"]
-  Demographics: { name: string }[];
-  aired_from: string;
-  aired_to: string;
-}
 
 export default function SeasonalAnimeClient() {
   const searchParams = useSearchParams();
