@@ -14,6 +14,7 @@ interface Anime {
   mal_id: number;
   title: string;
   type: string;
+  title_vietnamese: string;
   episodes: number;
   status: string;
   image_url: string;
