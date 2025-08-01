@@ -19,14 +19,15 @@ interface Recommendation {
   image_url: string;
 }
 
+interface RecommendResponse {
+  recommendations: Recommendation[];
+  message: string;
+}
+
 interface ChatItem {
   userMessage: string;
   response: RecommendResponse;
   isTyping?: boolean;
-}
-
-interface RecommendResponse {
-  recommendations: Recommendation[];
 }
 
 export default function ChatWidget() {
@@ -36,54 +37,54 @@ export default function ChatWidget() {
 
   const { user } = useUser();
 
-  // Lưu lại thoại trước đó
   const [chatHistory, setChatHistory] = useState<ChatItem[]>([]);
 
-  console.log(chatHistory);
-
   const handleFetch = async () => {
-    // Gọi hàm phân tích câu và trả về Object kiểu RequestParams
     const parsed: RequestParams | null = parseUserInput(userInput);
 
-    console.log("Thông tin gọi AI: ", parsed);
-
     if (!parsed) {
-      console.log("Không hiểu câu hỏi. Ví dụ: 'Cho tôi anime mùa xuân 2023'");
+      setUserInput("");
+
+      setChatHistory((prev) => [
+        ...prev,
+        {
+          userMessage: userInput,
+          response: {
+            recommendations: [],
+            message: "Không thể thực hiện yêu cầu của bạn.",
+          },
+        },
+      ]);
       return;
     }
 
     const currentUserMessage = userInput;
-    setUserInput(""); // Xóa input sớm để trông mượt
+    setUserInput("");
 
-    // ✅ Bước 1: Thêm tin nhắn người dùng trước (response tạm thời là null)
+    // Thêm tin nhắn người dùng với phản hồi rỗng (loading)
     setChatHistory((prev) => [
       ...prev,
       {
         userMessage: currentUserMessage,
-        response: { recommendations: [] }, // hoặc có thể để là `null` nếu thích xử lý loading riêng
+        response: { recommendations: [], message: "" },
       },
     ]);
 
     setIsLoading(true);
 
-    // ✅ Bước 2: Sau 1 giây mới gọi API
     setTimeout(async () => {
       try {
         const data = await callApiByType(parsed);
 
-        // ✅ Bước 3: Cập nhật phản hồi cho tin nhắn cuối
         setChatHistory((prev) => {
           const updated = [...prev];
           const lastIndex = updated.length - 1;
-
           if (lastIndex >= 0) {
-            const lastMessage = updated[lastIndex];
             updated[lastIndex] = {
-              ...lastMessage,
+              ...updated[lastIndex],
               response: data,
             };
           }
-
           return updated;
         });
       } catch (err) {
@@ -91,7 +92,7 @@ export default function ChatWidget() {
       } finally {
         setIsLoading(false);
       }
-    }, 1000); // Delay 1 giây
+    }, 1000);
   };
 
   return (
@@ -131,29 +132,37 @@ export default function ChatWidget() {
                     </div>
                   </div>
 
-                  {/* Gợi ý từ AI */}
-                  {chat.response.recommendations.map((anime, index) => (
-                    <div
-                      key={index}
-                      className="flex items-start space-x-3 mt-3 justify-start"
-                    >
-                      <img
-                        src={anime.image_url}
-                        alt={anime.title}
-                        className="h-20 w-16 object-cover rounded-lg border"
-                      />
-                      <div className="bg-gray-100 px-3 py-2 rounded-2xl shadow max-w-[75%]">
-                        <Link href={`/anime/${anime.mal_id}`}>
-                          <p className="font-semibold text-sm text-gray-800">
-                            {anime.title}
+                  {/* Gợi ý từ AI nếu có */}
+                  {chat.response.recommendations.length > 0 &&
+                    chat.response.recommendations.map((anime, index) => (
+                      <div
+                        key={index}
+                        className="flex items-start space-x-3 mt-3 justify-start"
+                      >
+                        <img
+                          src={anime.image_url}
+                          alt={anime.title}
+                          className="h-20 w-16 object-cover rounded-lg border"
+                        />
+                        <div className="bg-gray-100 px-3 py-2 rounded-2xl shadow max-w-[75%]">
+                          <Link href={`/anime/${anime.mal_id}`}>
+                            <p className="font-semibold text-sm text-gray-800">
+                              {anime.title}
+                            </p>
+                          </Link>
+                          <p className="text-xs text-gray-600">
+                            Score: {anime.score}
                           </p>
-                        </Link>
-                        <p className="text-xs text-gray-600">
-                          Score: {anime.score}
-                        </p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+
+                  {/* Hiển thị message nếu có */}
+                  {chat.response.message && (
+                    <p className="bg-gray-100 px-3 py-2 rounded-2xl shadow max-w-[75%]">
+                      {chat.response.message}
+                    </p>
+                  )}
                 </div>
               ))
             ) : (

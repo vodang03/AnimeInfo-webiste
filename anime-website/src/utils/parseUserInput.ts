@@ -115,7 +115,7 @@ export function parseUserInput(input: string): RequestParams | null {
     apiType = isUnrecommend ? "season_unrecommend" : "season_recommend";
   } else if (year) {
     apiType = isUnrecommend ? "by_year_unrecommend" : "by_year";
-  } else {
+  } else if (lowerInput.includes("hay")) {
     apiType = isUnrecommend ? "unrecommend" : "recommend";
   }
 
@@ -140,6 +140,11 @@ export function parseUserInput(input: string): RequestParams | null {
 
   if (apiType === "by_year" && !year) {
     console.log("Thiếu thông tin năm.");
+    return null;
+  }
+
+  if (!apiType) {
+    console.log("Không xác định được kiểu API.");
     return null;
   }
 
