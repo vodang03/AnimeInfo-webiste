@@ -89,6 +89,23 @@ export default function ChatWidget() {
         });
       } catch (err) {
         console.error(err);
+        {
+          setChatHistory((prev) => {
+            const updated = [...prev];
+            const lastIndex = updated.length - 1;
+            if (lastIndex >= 0) {
+              updated[lastIndex] = {
+                ...updated[lastIndex],
+                response: {
+                  recommendations: [],
+                  message:
+                    "Không tìm thấy kết quả phù hợp với yêu cầu của bạn.",
+                },
+              };
+            }
+            return updated;
+          });
+        }
       } finally {
         setIsLoading(false);
       }
