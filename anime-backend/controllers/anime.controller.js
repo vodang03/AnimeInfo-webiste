@@ -274,8 +274,10 @@ exports.hintAnime = async (req, res) => {
       ],
 
       where: {
-        title: { [Op.like]: `%${query}%` },
-        title_vietnamese: { [Op.like]: `%${query}%` },
+        [Op.or]: [
+          { title: { [Op.like]: `%${query}%` } },
+          { title_vietnamese: { [Op.like]: `%${query}%` } },
+        ],
       },
 
       // Logic tìm kiếm theo xu hướng hiện nay
@@ -317,8 +319,10 @@ exports.searchAnime = async (req, res) => {
         },
       ],
       where: {
-        title: { [Op.like]: `%${q}%` },
-        title_vietnamese: { [Op.like]: `%${query}%` },
+        [Op.or]: [
+          { title: { [Op.like]: `%${query}%` } },
+          { title_vietnamese: { [Op.like]: `%${query}%` } },
+        ],
       },
       order: [
         [
