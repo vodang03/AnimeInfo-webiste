@@ -320,8 +320,8 @@ exports.searchAnime = async (req, res) => {
       ],
       where: {
         [Op.or]: [
-          { title: { [Op.like]: `%${query}%` } },
-          { title_vietnamese: { [Op.like]: `%${query}%` } },
+          { title: { [Op.like]: `%${q}%` } },
+          { title_vietnamese: { [Op.like]: `%${q}%` } },
         ],
       },
       order: [
