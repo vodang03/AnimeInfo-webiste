@@ -16,7 +16,7 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const sensitiveGenres = ["Hentai", "Ecchi", "Yaoi", "Yuri", "Josei"];
+const sensitiveGenres = ["Hentai", "Ecchi", "Josei"];
 
 exports.getAllAnime = async (req, res) => {
   try {
@@ -435,6 +435,67 @@ exports.searchAnimeByTheme = async (req, res) => {
   }
 };
 
+exports.searchAnimeByGenreTheme = async (req, res) => {
+  try {
+    const { genre, theme } = req.query;
+
+    if (!genre && !theme) {
+      return res
+        .status(400)
+        .json({ message: "Thiếu tham số genre hoặc theme." });
+    }
+
+    const includeOptions = [];
+
+    if (genre) {
+      includeOptions.push({
+        model: Genre,
+        attributes: ["name"],
+        where: { name: genre },
+        through: { attributes: [] },
+        required: true,
+      });
+    }
+
+    if (theme) {
+      includeOptions.push({
+        model: Theme,
+        attributes: ["name"],
+        where: { name: theme },
+        through: { attributes: [] },
+        required: true,
+      });
+    }
+
+    // Add demographic vào include nếu muốn luôn có
+    includeOptions.push({
+      model: Demographic,
+      attributes: ["name"],
+      through: { attributes: [] },
+    });
+
+    const result = await Anime.findAll({
+      include: includeOptions,
+      order: [
+        [
+          literal(
+            `(popularity * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
+          ),
+          "DESC",
+        ],
+      ],
+      distinct: true,
+    });
+
+    res.json(result);
+  } catch (err) {
+    console.error("Lỗi khi tìm kiếm theo genre/theme:", err);
+    res
+      .status(500)
+      .json({ message: "Lỗi khi tìm kiếm anime theo genre/theme." });
+  }
+};
+
 exports.getAnimeById = async (req, res) => {
   const animeId = req.params.id;
   // console.log(animeId);
@@ -623,6 +684,22 @@ exports.removeFavoriteAnime = async (req, res) => {
 exports.getAllGenres = async (req, res) => {
   try {
     const result = await Genre.findAll();
+
+    // Lọc bỏ các thể loại nhạy cảm
+    const filteredGenres = result.filter(
+      (genre) => !sensitiveGenres.includes(genre.name)
+    );
+
+    res.status(200).json(filteredGenres);
+  } catch (err) {
+    console.error("Lỗi lấy genre: ", err);
+    res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+};
+
+exports.getAllThemes = async (req, res) => {
+  try {
+    const result = await Theme.findAll();
 
     res.status(200).json(result);
   } catch (err) {

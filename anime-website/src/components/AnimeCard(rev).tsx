@@ -41,13 +41,27 @@ const AnimeCardReverse: React.FC<AnimeCardProps> = ({ anime }) => {
 
           <div className="mt-3 text-sm">
             <strong>Thể loại:</strong>{" "}
-            {anime.Genres.map((g) => g.name).join(", ")}
+            {anime.Genres.map((g, index) => (
+              <span key={g.name}>
+                {index > 0 && ", "}
+                <Link href={`/search?genre=${encodeURIComponent(g.name)}`}>
+                  {g.name}
+                </Link>
+              </span>
+            ))}
           </div>
 
           {anime.Themes.length > 0 && (
             <div className="text-sm">
               <strong>Chủ đề:</strong>{" "}
-              {anime.Themes?.map((g) => g.name).join(", ") || "null"}
+              {anime.Themes.map((g, index) => (
+                <span key={g.name}>
+                  {index > 0 && ", "}
+                  <Link href={`/search?theme=${encodeURIComponent(g.name)}`}>
+                    {g.name}
+                  </Link>
+                </span>
+              ))}
             </div>
           )}
 

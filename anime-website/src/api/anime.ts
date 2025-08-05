@@ -24,6 +24,37 @@ export const fetchAnimeSearch = async (query?: string) => {
   }
 };
 
+export const fetchGenreThemeAnimeSearch = async (
+  genre?: string,
+  theme?: string
+) => {
+  try {
+    if (!genre && !theme) return []; // chỉ khi cả hai đều rỗng mới trả []
+
+    const params: { genre?: string; theme?: string } = {};
+
+    if (genre) {
+      params.genre = genre;
+    }
+
+    if (theme) {
+      params.theme = theme;
+    }
+
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/genrethemesearch`,
+      {
+        params,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error searching anime:", error);
+    throw error;
+  }
+};
+
 export const fetchGenreAnimeSearch = async (genre?: string) => {
   try {
     if (!genre) return [];
@@ -176,6 +207,18 @@ export const fetchGenres = async () => {
       `${process.env.NEXT_PUBLIC_API_URL}/api/anime/genre`
     );
     return response.data; // [{ genre_id: 1, name: "Action" }, ...]
+  } catch (error) {
+    console.error("Error fetching genres:", error);
+    throw error;
+  }
+};
+
+export const fetchThemes = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/theme`
+    );
+    return response.data;
   } catch (error) {
     console.error("Error fetching genres:", error);
     throw error;

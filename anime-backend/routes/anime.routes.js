@@ -25,6 +25,8 @@ const {
   updateWatchStatus,
   getWatchStatus,
   getWatchStatusAnimeByUserId,
+  getAllThemes,
+  searchAnimeByGenreTheme,
 } = require("../controllers/anime.controller");
 
 router.get("/", getAllAnime);
@@ -54,6 +56,7 @@ router.get("/hint", hintAnime);
 router.get("/search", searchAnime);
 router.get("/genresearch", searchAnimeByGenre);
 router.get("/themesearch", searchAnimeByTheme);
+router.get("/genrethemesearch", searchAnimeByGenreTheme);
 
 // Thêm vào Favorite
 router.post("/favorite", addFavoriteAnime);
@@ -66,6 +69,9 @@ router.get("/planninglist/:userId", getWatchStatusAnimeByUserId);
 
 // Lấy tất cả genre anime
 router.get("/genre", getAllGenres);
+
+// Lấy tất cả theme anime
+router.get("/theme", getAllThemes);
 
 // Lấy anime theo genres
 router.get("/by-genres", getAnimeByGenres);

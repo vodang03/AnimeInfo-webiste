@@ -47,7 +47,7 @@ export default function UserProfileForm() {
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const restrictedGenres = [12, 26, 28, 49]; // Thể loại cần giới hạn độ tuổi
+  // const restrictedGenres = [12, 26, 28, 49]; // Thể loại cần giới hạn độ tuổi
   // const [userAge, setUserAge] = useState<number | undefined>(undefined);
 
   const handleAvatarSelect = async (url: string) => {
@@ -383,37 +383,29 @@ export default function UserProfileForm() {
             Những thể loại Anime bạn thích (tối đa 3)
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {genre
-              .filter(
-                (namegenre) =>
-                  !(
-                    // userAge! < 18 &&
-                    restrictedGenres.includes(namegenre.genre_id)
-                  )
-              )
-              .map((namegenre, index) => {
-                const isSelected = selectedGenres?.includes(namegenre.genre_id);
-                const isDisabled = !isSelected && selectedGenres?.length >= 3;
+            {genre.map((namegenre, index) => {
+              const isSelected = selectedGenres?.includes(namegenre.genre_id);
+              const isDisabled = !isSelected && selectedGenres?.length >= 3;
 
-                return (
-                  <label
-                    key={index}
-                    className={`flex items-center space-x-2 cursor-pointer ${
-                      isDisabled ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      className="appearance-none h-5 w-5 rounded-full border border-blue-400 checked:bg-blue-400 transition duration-200"
-                      value={namegenre.name}
-                      checked={selectedGenres?.includes(namegenre.genre_id)}
-                      onChange={() => handleCheckboxChange(namegenre.genre_id)}
-                      disabled={isDisabled}
-                    />
-                    <span className="text-gray-800">{namegenre.name}</span>
-                  </label>
-                );
-              })}
+              return (
+                <label
+                  key={index}
+                  className={`flex items-center space-x-2 cursor-pointer ${
+                    isDisabled ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    className="appearance-none h-5 w-5 rounded-full border border-blue-400 checked:bg-blue-400 transition duration-200"
+                    value={namegenre.name}
+                    checked={selectedGenres?.includes(namegenre.genre_id)}
+                    onChange={() => handleCheckboxChange(namegenre.genre_id)}
+                    disabled={isDisabled}
+                  />
+                  <span className="text-gray-800">{namegenre.name}</span>
+                </label>
+              );
+            })}
           </div>
 
           <button
