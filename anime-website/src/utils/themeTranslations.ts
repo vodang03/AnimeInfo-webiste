@@ -31,7 +31,7 @@ export const themeTranslations: Record<string, string> = {
   "Idols (Male)": "Idol nam",
   Isekai: "Isekai",
   Iyashikei: "Chữa lành",
-  "Love Polygon": "Tình yêu tay ba/tròn",
+  "Love Polygon": "Tình yêu tay ba",
   "Magical Sex Shift": "Biến đổi giới tính",
   "Mahou Shoujo": "Nữ pháp sư",
   Medical: "Y học",

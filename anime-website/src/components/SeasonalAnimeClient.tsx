@@ -21,7 +21,7 @@ export default function SeasonalAnimeClient() {
 
   // Phân trang
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 18; // số lượng mỗi trang
+  const itemsPerPage = 12; // số lượng mỗi trang
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = animeList.slice(indexOfFirstItem, indexOfLastItem);
