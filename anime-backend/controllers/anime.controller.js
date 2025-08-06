@@ -16,7 +16,7 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const sensitiveGenres = ["Hentai", "Ecchi", "Josei"];
+const sensitiveGenres = ["Hentai", "Ecchi", "Josei", "Erotica"];
 
 exports.getAllAnime = async (req, res) => {
   try {

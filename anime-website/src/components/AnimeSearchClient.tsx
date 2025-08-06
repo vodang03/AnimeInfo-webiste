@@ -164,15 +164,13 @@ export default function AnimeSearchClient() {
         {theme && ` (Chủ đề: ${theme})`}
       </h2>
 
-      <div className="pb-2 max-w-28">
-        <label
-          className="mr-2 text-gray-700 font-medium flex items-center gap-1 cursor-pointer"
-          onClick={() => setIsExpand((prev) => !prev)}
-        >
-          Danh mục
-          {isExpand ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-        </label>
-      </div>
+      <button
+        onClick={() => setIsExpand((prev) => !prev)}
+        className="flex items-center gap-2 pb-2 text-indigo-600 font-medium hover: focus:outline-none transition"
+      >
+        {isExpand ? "Ẩn danh mục" : "Hiện danh mục"}
+        {isExpand ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+      </button>
 
       <AnimatePresence>
         {isExpand && (
@@ -184,7 +182,7 @@ export default function AnimeSearchClient() {
             style={{ transformOrigin: "top" }}
             className="overflow-hidden py-4 bg-gradient-to-br from-indigo-100 to-pink-100 rounded-md"
           >
-            <span className="pl-6">Thể loại</span>
+            <div className="pl-6 mb-2">Thể loại</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 pl-6">
               {isgenre.map((namegenre, index) => {
                 return (
@@ -205,7 +203,7 @@ export default function AnimeSearchClient() {
               })}
             </div>
 
-            <span className="pl-6">Chủ đề</span>
+            <div className="pl-6 my-2">Chủ đề</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 pl-6">
               {istheme.map((nametheme, index) => {
                 return (
