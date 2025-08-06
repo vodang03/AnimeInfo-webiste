@@ -14,6 +14,10 @@ import {
 } from "@/api/anime";
 import { useUser } from "@/contexts/UserContext";
 import { toast } from "react-toastify";
+import { genreTranslations } from "@/utils/genreTranslations";
+import { themeTranslations } from "@/utils/themeTranslations";
+import { audienceTranslations } from "@/utils/audienceTranslations";
+import { statusTranslations } from "@/utils/statusTranslations";
 
 interface Anime {
   mal_id: number;
@@ -196,7 +200,7 @@ export default function AnimeDetailClient({
             </div>
 
             {/* Tags */}
-            <div className="mt-4 flex flex-wrap gap-2 text-xs font-medium">
+            <div className="mt-4 flex flex-wrap gap-2 text-sm font-medium">
               <span className="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full">
                 {anime.season || anime.year
                   ? `${
@@ -219,7 +223,7 @@ export default function AnimeDetailClient({
                     : "bg-gray-200 text-gray-700"
                 }`}
               >
-                {anime.status}
+                {statusTranslations[anime.status] || anime.status}
               </span>
             </div>
 
@@ -235,9 +239,9 @@ export default function AnimeDetailClient({
                     <Link
                       key={genre.name}
                       href={`/search?genre=${encodeURIComponent(genre.name)}`}
-                      className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full text-xs hover:bg-slate-200 transition"
+                      className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full hover:bg-slate-200 transition"
                     >
-                      {genre.name}
+                      {genreTranslations[genre.name] || genre.name}
                     </Link>
                   ))}
                 </div>
@@ -253,13 +257,25 @@ export default function AnimeDetailClient({
                     <Link
                       key={theme.name}
                       href={`/search?theme=${encodeURIComponent(theme.name)}`}
-                      className="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-xs border border-indigo-200 hover:bg-indigo-100 transition"
+                      className="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-sm border border-indigo-200 hover:bg-indigo-100 transition"
                     >
-                      {theme.name}
+                      {themeTranslations[theme.name] || theme.name}
                     </Link>
                   ))}
                 </div>
               )}
+            </div>
+
+            {/* Demographics */}
+            <div className="mt-2 flex flex-wrap gap-2">
+              {anime.Demographics?.map((demo) => (
+                <span
+                  key={demo.name}
+                  className="bg-yellow-400 text-black text-sm px-3 py-1 rounded-full"
+                >
+                  {audienceTranslations[demo.name] || demo.name}
+                </span>
+              ))}
             </div>
 
             {/* User Rating */}
@@ -309,18 +325,6 @@ export default function AnimeDetailClient({
                   <option value="5">Bỏ xem</option>
                 </select>
               </div>
-            </div>
-
-            {/* Demographics */}
-            <div className="mt-2 flex flex-wrap gap-2">
-              {anime.Demographics?.map((demo) => (
-                <span
-                  key={demo.name}
-                  className="bg-yellow-400 text-black text-xs px-3 py-1 rounded-full"
-                >
-                  {demo.name}
-                </span>
-              ))}
             </div>
 
             {/* Synopsis */}

@@ -12,6 +12,8 @@ import {
 import { Anime } from "@/app/(anime)/home/page";
 import { Genres } from "@/app/user/[id]/page";
 import AnimeList from "@/components/AnimeList";
+import { genreTranslations } from "@/utils/genreTranslations";
+import { themeTranslations } from "@/utils/themeTranslations";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -160,8 +162,8 @@ export default function AnimeSearchClient() {
     <div className="bg-white rounded-2xl shadow-md p-6">
       <h2 className="text-indigo-800 text-2xl font-bold mb-4">
         Kết quả tìm kiếm: {query && ` "${query}"`}
-        {genre && ` (Thể loại: ${genre})`}
-        {theme && ` (Chủ đề: ${theme})`}
+        {genre && ` (Thể loại: ${genreTranslations[genre] || genre})`}
+        {theme && ` (Chủ đề: ${themeTranslations[theme] || theme})`}
       </h2>
 
       <button
@@ -197,7 +199,9 @@ export default function AnimeSearchClient() {
                       checked={selectedGenres?.includes(namegenre.name)}
                       onChange={() => handleCheckboxChangeGenre(namegenre.name)}
                     />
-                    <span className="text-gray-800">{namegenre.name}</span>
+                    <span className="text-gray-800">
+                      {genreTranslations[namegenre.name] || namegenre.name}
+                    </span>
                   </label>
                 );
               })}
@@ -218,7 +222,9 @@ export default function AnimeSearchClient() {
                       checked={selectedTheme?.includes(nametheme.name)}
                       onChange={() => handleCheckboxChangeTheme(nametheme.name)}
                     />
-                    <span className="text-gray-800">{nametheme.name}</span>
+                    <span className="text-gray-800">
+                      {themeTranslations[nametheme.name] || nametheme.name}
+                    </span>
                   </label>
                 );
               })}

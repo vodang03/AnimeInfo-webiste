@@ -5,6 +5,9 @@ import { format } from "date-fns";
 import Link from "next/link";
 import FavoriteF from "./FavoriteF";
 import Synopsis from "./SynopsisExpand";
+import { genreTranslations } from "@/utils/genreTranslations";
+import { audienceTranslations } from "@/utils/audienceTranslations";
+import { statusTranslations } from "@/utils/statusTranslations";
 
 interface Anime {
   mal_id: number;
@@ -93,7 +96,9 @@ export default function AnimeList({
                       <span className="font-semibold text-gray-900">
                         Genres:
                       </span>{" "}
-                      {anime.Genres.map((g) => g.name).join(", ")}
+                      {anime.Genres.map(
+                        (g) => genreTranslations[g.name] || g.name
+                      ).join(", ")}
                     </p>
                   )}
 
@@ -102,13 +107,15 @@ export default function AnimeList({
                       <span className="font-semibold text-gray-900">
                         Demographics:
                       </span>{" "}
-                      {anime.Demographics.map((d) => d.name).join(", ")}
+                      {anime.Demographics.map(
+                        (d) => audienceTranslations[d.name] || d.name
+                      ).join(", ")}
                     </p>
                   )}
 
                   <p>
                     <span className="font-semibold text-gray-900">Status:</span>{" "}
-                    {anime.status}
+                    {statusTranslations[anime.status] || anime.status}
                   </p>
                   <p>
                     <span className="font-semibold text-gray-900">Type:</span>{" "}

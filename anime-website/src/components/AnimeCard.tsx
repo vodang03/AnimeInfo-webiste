@@ -1,4 +1,7 @@
+import { audienceTranslations } from "@/utils/audienceTranslations";
 import genreColorMap from "@/utils/genreColorMap";
+import { genreTranslations } from "@/utils/genreTranslations";
+import { themeTranslations } from "@/utils/themeTranslations";
 import Link from "next/link";
 import React from "react";
 
@@ -53,7 +56,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
               <span key={g.name}>
                 {index > 0 && ", "}
                 <Link href={`/search?genre=${encodeURIComponent(g.name)}`}>
-                  {g.name}
+                  {genreTranslations[g.name] || g.name}
                 </Link>
               </span>
             ))}
@@ -66,7 +69,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
                 <span key={g.name}>
                   {index > 0 && ", "}
                   <Link href={`/search?theme=${encodeURIComponent(g.name)}`}>
-                    {g.name}
+                    {themeTranslations[g.name] || g.name}
                   </Link>
                 </span>
               ))}
@@ -76,7 +79,9 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
           {anime.Demographics.length > 0 && (
             <div className="text-sm ">
               <strong>Đối tượng:</strong>{" "}
-              {anime.Demographics.map((d) => d.name).join(", ")}
+              {anime.Demographics.map(
+                (d) => audienceTranslations[d.name] || d.name
+              ).join(", ")}
             </div>
           )}
 
