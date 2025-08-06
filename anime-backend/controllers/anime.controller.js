@@ -760,8 +760,8 @@ exports.getAnimeByGenres = async (req, res) => {
 // POST import anime từ API Jikan
 exports.importAnime = async (req, res) => {
   try {
-    const startPage = parseInt(req.query.startPage) || 1156;
-    const endPage = parseInt(req.query.endPage) || 1157;
+    const startPage = parseInt(req.query.startPage) || 1058;
+    const endPage = parseInt(req.query.endPage) || 1158;
 
     const updatedAnimeTitles = [];
 
