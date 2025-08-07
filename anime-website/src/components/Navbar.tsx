@@ -17,6 +17,7 @@ interface NavbarProps {
 
 interface Anime {
   title: string;
+  title_vietnamese: string;
   mal_id: number;
   image_url: string; // hoặc images.jpg.image_url nếu dùng từ Jikan
 }
