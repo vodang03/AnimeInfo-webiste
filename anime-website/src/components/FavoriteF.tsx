@@ -77,7 +77,7 @@ export default function FavoriteF({ anime }: FavoriteFProps) {
       }
     } catch (error) {
       console.error("Lỗi thao tác favorite:", error);
-      toast.warning("⚠️ Có lỗi xảy ra, vui lòng thử lại.");
+      toast.warning("Có lỗi xảy ra, vui lòng thử lại.");
     }
   };
 

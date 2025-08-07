@@ -565,6 +565,12 @@ exports.addFavoriteAnime = async (req, res) => {
       mal_id: anime_id,
     });
 
+    // Cộng thêm 1 vào trường favorite trong bảng anime
+    await Anime.increment("favorites", {
+      by: 1,
+      where: { mal_id: anime_id },
+    });
+
     return res.status(200).json({ message: "Đã thêm vào danh sách yêu thích" });
   } catch (err) {
     if (err.name === "SequelizeUniqueConstraintError") {
@@ -674,6 +680,16 @@ exports.removeFavoriteAnime = async (req, res) => {
 
   try {
     await Favorite.destroy({ where: { user_id: userId, mal_id: anime_id } });
+
+    // Trừ 1 vào cột favorite trong bảng anime (nhưng không cho xuống dưới 0)
+    await Anime.increment("favorites", {
+      by: -1,
+      where: {
+        mal_id: anime_id,
+        favorites: { [Op.gt]: 0 }, // chỉ trừ nếu favorite > 0
+      },
+    });
+
     res.status(200).json({ message: "Đã xoá khỏi danh sách yêu thích" });
   } catch (err) {
     console.error("Lỗi xoá favorite:", err);
