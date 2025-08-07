@@ -43,6 +43,11 @@ export default function MessageInput({
         placeholder="Nhập tin nhắn..."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && message.trim() !== "") {
+            handleSend();
+          }
+        }}
         className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
       />
 
