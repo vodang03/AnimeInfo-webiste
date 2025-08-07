@@ -158,6 +158,7 @@ exports.getMessagesByRoom = async (req, res) => {
       username: msg.User.username,
       file: msg.file_url,
       avatarUrl: msg.User?.avatar_url,
+      created_at: msg.created_at,
       isSender: msg.user_id === Number(currentUserId),
     }));
 

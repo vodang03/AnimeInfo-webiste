@@ -1,6 +1,7 @@
 interface AnimeSuggestion {
   mal_id: number;
   title: string;
+  title_vietnamese: string;
   image_url: string;
 }
 
@@ -109,10 +110,10 @@ const SearchBar: React.FC<SearchBarPros> = ({
                 className="w-12 h-16 object-cover rounded-lg border"
               />
               <div>
-                <p className="text-sm font-semibold line-clamp-1">
-                  {anime.title}
+                <p className="text-base font-semibold line-clamp-1">
+                  {anime.title_vietnamese || anime.title}
                 </p>
-                <p className="text-xs text-gray-500">ID: {anime.mal_id}</p>
+                <p className="text-sm text-gray-500">{anime.title}</p>
               </div>
             </li>
           ))}

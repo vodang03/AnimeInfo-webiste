@@ -27,6 +27,12 @@ export default function SeasonalAnimeClient() {
   const currentItems = animeList.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(animeList.length / itemsPerPage);
 
+  const currentYear = new Date().getFullYear();
+  const years = Array.from(
+    { length: currentYear - 2010 + 1 },
+    (_, i) => currentYear - i
+  );
+
   useEffect(() => {
     const loadAnime = async () => {
       try {
@@ -54,6 +60,22 @@ export default function SeasonalAnimeClient() {
     setAnimeList(sortedList);
     setCurrentPage(1);
   }, [orderBy]);
+
+  useEffect(() => {
+    // Nếu không có query param trên URL thì tự động thêm
+    if (!searchParams.get("season") || !searchParams.get("year")) {
+      const defaultSeason = "summer";
+      const defaultYear = new Date().getFullYear().toString();
+
+      const params = new URLSearchParams({
+        season: searchParams.get("season") || defaultSeason,
+        year: searchParams.get("year") || defaultYear,
+      });
+
+      // Sử dụng replace để không thêm vào history
+      router.replace(`/seasonal-anime?${params.toString()}`);
+    }
+  }, []);
 
   // Hàm xử lý khi nhấn nút "Lọc"
   const handleFilter = async () => {
@@ -89,9 +111,11 @@ export default function SeasonalAnimeClient() {
           value={selectedYear}
           onChange={(e) => setSelectedYear(parseInt(e.target.value))}
         >
-          <option value={2025}>2025</option>
-          <option value={2024}>2024</option>
-          <option value={2023}>2023</option>
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
         </select>
 
         <button

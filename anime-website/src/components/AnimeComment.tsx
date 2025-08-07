@@ -20,6 +20,7 @@ export interface Comment {
   id: number;
   anime_id: number;
   content: string;
+  created_at: Date;
   User: User; // Thông tin user liên quan
 }
 
@@ -49,6 +50,7 @@ export default function AnimeComment({
           id: res.data.comment.id,
           anime_id: animeID,
           content: newComment.trim(),
+          created_at: new Date(),
           User: {
             user_id: user.user.user_id,
             username: user.user.username,
@@ -61,6 +63,32 @@ export default function AnimeComment({
       }
     } catch (err) {
       console.log("Lỗi khi thêm bình luận", err);
+    }
+  };
+
+  // So sánh với ngày hiện tại
+  const formatSmartDate = (rawDate: string | Date) => {
+    const date = new Date(rawDate);
+    const now = new Date();
+
+    const isSameDay =
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear();
+
+    if (isSameDay) {
+      return date.toLocaleTimeString("vi-VN", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } else {
+      return date.toLocaleString("vi-VN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     }
   };
 
@@ -119,6 +147,10 @@ export default function AnimeComment({
                 />
                 <span className="font-medium text-gray-800">
                   {comment.User.username}
+                </span>
+
+                <span className="text-xs text-gray-500">
+                  {formatSmartDate(comment.created_at)}
                 </span>
               </div>
 

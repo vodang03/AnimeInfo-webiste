@@ -201,7 +201,7 @@ export default function AnimeDetailClient({
 
             {/* Tags */}
             <div className="mt-4 flex flex-wrap gap-2 text-sm font-medium">
-              <span className="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full">
+              <span className="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full border border-indigo-300">
                 {anime.season || anime.year
                   ? `${
                       anime.season
@@ -213,14 +213,14 @@ export default function AnimeDetailClient({
                     }`
                   : "Unknown"}
               </span>
-              <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full">
+              <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full border border-indigo-300">
                 {anime.type}
               </span>
               <span
                 className={`px-2 py-1 rounded-full ${
                   anime.status === "Currently Airing"
-                    ? "bg-emerald-100 text-emerald-700"
-                    : "bg-gray-200 text-gray-700"
+                    ? "bg-emerald-100 text-emerald-700 border border-indigo-300"
+                    : "bg-gray-200 text-gray-700 border border-indigo-300"
                 }`}
               >
                 {statusTranslations[anime.status] || anime.status}

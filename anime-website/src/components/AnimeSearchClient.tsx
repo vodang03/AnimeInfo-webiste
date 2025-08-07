@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import CategoryFilter from "./CategoryFilter";
 
 export interface Themes {
   theme_id: number;
@@ -184,51 +185,15 @@ export default function AnimeSearchClient() {
             style={{ transformOrigin: "top" }}
             className="overflow-hidden py-4 bg-gradient-to-br from-indigo-100 to-pink-100 rounded-md"
           >
-            <div className="pl-6 mb-2">Thể loại</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 pl-6">
-              {isgenre.map((namegenre, index) => {
-                return (
-                  <label
-                    key={index}
-                    className={`flex items-center space-x-2 cursor-pointer`}
-                  >
-                    <input
-                      type="checkbox"
-                      className="appearance-none h-5 w-5 rounded-full border border-blue-400 checked:bg-blue-400 transition duration-200"
-                      value={namegenre.name}
-                      checked={selectedGenres?.includes(namegenre.name)}
-                      onChange={() => handleCheckboxChangeGenre(namegenre.name)}
-                    />
-                    <span className="text-gray-800">
-                      {genreTranslations[namegenre.name] || namegenre.name}
-                    </span>
-                  </label>
-                );
-              })}
-            </div>
-
-            <div className="pl-6 my-2">Chủ đề</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 pl-6">
-              {istheme.map((nametheme, index) => {
-                return (
-                  <label
-                    key={index}
-                    className={`flex items-center space-x-2 cursor-pointer`}
-                  >
-                    <input
-                      type="checkbox"
-                      className="appearance-none h-5 w-5 rounded-full border border-blue-400 checked:bg-blue-400 transition duration-200"
-                      value={nametheme.name}
-                      checked={selectedTheme?.includes(nametheme.name)}
-                      onChange={() => handleCheckboxChangeTheme(nametheme.name)}
-                    />
-                    <span className="text-gray-800">
-                      {themeTranslations[nametheme.name] || nametheme.name}
-                    </span>
-                  </label>
-                );
-              })}
-            </div>
+            <CategoryFilter
+              isExpand={isExpand}
+              genres={isgenre}
+              themes={istheme}
+              selectedGenres={selectedGenres}
+              selectedThemes={selectedTheme}
+              onGenreChange={handleCheckboxChangeGenre}
+              onThemeChange={handleCheckboxChangeTheme}
+            />
           </motion.div>
         )}
       </AnimatePresence>

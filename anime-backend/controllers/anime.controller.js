@@ -825,7 +825,6 @@ exports.importAnime = async (req, res) => {
             title: animeData.title,
             title_english: animeData.title_english,
             title_japanese: animeData.title_japanese,
-            title_vietnamese: null,
             type: animeData.type,
             source: animeData.source,
             airing: animeData.airing,

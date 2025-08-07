@@ -13,6 +13,7 @@ interface Message {
   message: string;
   username: string;
   avatarUrl: string;
+  created_at: Date;
   roomId?: number;
   userId?: number;
 }
@@ -67,6 +68,7 @@ export default function ChatBox({ roomId }: { roomId: number }) {
       message: text,
       username: user!.user.username,
       avatarUrl: user!.user.avatar_url,
+      created_at: new Date(),
       roomId,
       userId: currentUserId,
     };
