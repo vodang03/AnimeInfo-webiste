@@ -69,7 +69,6 @@ export default function AdminUserList() {
                 {/* Name column */}
                 <td className="p-3">
                   <div className="flex items-center gap-3">
-                    <input type="checkbox" className="mr-2" />
                     <img
                       src={u.avatar_url}
                       alt={u.username}

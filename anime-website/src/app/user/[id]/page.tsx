@@ -185,6 +185,16 @@ export default function UserProfileForm() {
   };
 
   const handleSave = async () => {
+    console.log(formData);
+
+    if (!formData.username) {
+      toast.error("Không được để trống tên đăng nhập");
+      return;
+    } else if (!formData.email) {
+      toast.error("Không được để trống địa chỉ email");
+      return;
+    }
+
     try {
       const updated = await updateUserByID(user!.user.user_id, formData);
       console.log("Cập nhật thành công:", updated);

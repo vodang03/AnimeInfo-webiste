@@ -85,7 +85,7 @@ export default function AnimeList({
                   {anime.synopsis && (
                     <p>
                       <span className="font-semibold text-gray-900">
-                        Synopsis:
+                        Tóm tắt:
                       </span>{" "}
                       <Synopsis synopsis={anime.synopsis} unstyled />
                     </p>
@@ -94,7 +94,7 @@ export default function AnimeList({
                   {anime.Genres?.length > 0 && (
                     <p>
                       <span className="font-semibold text-gray-900">
-                        Genres:
+                        Thể loại:
                       </span>{" "}
                       {anime.Genres.map(
                         (g) => genreTranslations[g.name] || g.name
@@ -105,7 +105,7 @@ export default function AnimeList({
                   {anime.Demographics?.length > 0 && (
                     <p>
                       <span className="font-semibold text-gray-900">
-                        Demographics:
+                        Đối tượng xem:
                       </span>{" "}
                       {anime.Demographics.map(
                         (d) => audienceTranslations[d.name] || d.name
@@ -114,17 +114,17 @@ export default function AnimeList({
                   )}
 
                   <p>
-                    <span className="font-semibold text-gray-900">Status:</span>{" "}
+                    <span className="font-semibold text-gray-900">
+                      Trạng thái:
+                    </span>{" "}
                     {statusTranslations[anime.status] || anime.status}
                   </p>
                   <p>
-                    <span className="font-semibold text-gray-900">Type:</span>{" "}
+                    <span className="font-semibold text-gray-900">Loại:</span>{" "}
                     {anime.type}
                   </p>
                   <p>
-                    <span className="font-semibold text-gray-900">
-                      Episodes:
-                    </span>{" "}
+                    <span className="font-semibold text-gray-900">Số tập:</span>{" "}
                     {anime.episodes || "Unknown"}
                   </p>
                 </div>
