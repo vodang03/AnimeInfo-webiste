@@ -318,9 +318,7 @@ export default function DiscussionRoomList() {
       {/* Modal tham gia phòng */}
       {showJoinModal && selectedRoomId !== null && (
         <JoinRoomModal
-          roomTitle={
-            conversations.find((c) => c.id === selectedRoomId)?.title || ""
-          }
+          roomTitle={allRooms.find((c) => c.id === selectedRoomId)?.title || ""}
           onClose={() => setShowJoinModal(false)}
           onConfirm={handleConfirmJoin}
         />
