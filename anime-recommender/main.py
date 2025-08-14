@@ -79,11 +79,26 @@ class AnimeYearRequest(BaseModel):
     year:int
     top_n: int = 5
     
+df['popularity'] = pd.to_numeric(df['popularity'], errors='coerce')
+df['favorites'] = pd.to_numeric(df['favorites'], errors='coerce')
+df['scored_by'] = pd.to_numeric(df['scored_by'], errors='coerce')
+df['score'] = pd.to_numeric(df['score'], errors='coerce')
+df['year'] = pd.to_numeric(df['year'], errors='coerce')
+
+    
 # Những bộ anime top
 @app.post("/recommend")
 def recommend_top_anime(request: SimpleTopNRequest):
+    df['final_score'] = (
+        df['popularity'] * 0.3 +
+        df['favorites'] * 0.2 +
+        df['scored_by'] * 0.2 +
+        df['score'] * 0.2 +
+        df['year'] * 0.1
+    )
+    
     # Lấy top N anime có score cao nhất
-    top_anime = df.sort_values(by='score', ascending=False).head(request.top_n)
+    top_anime = df.sort_values(by='final_score', ascending=False).head(request.top_n)
 
     # Chọn cột muốn trả về
     recommendations = top_anime[['mal_id','title', 'genres', 'studios', 'year', 'score', 'image_url']].to_dict(orient='records')
@@ -96,9 +111,19 @@ def recommend_top_anime(request: SimpleTopNRequest):
 def unrecommend_anime(request: SimpleTopNRequest):
     # Loại các bộ anime 0 điểm
     filtered_df = df[df['score'] > 0]
+    # Loại các bộ anime có điểm nhỏ hơn 6.5 điểm
+    filtered_df = filtered_df[filtered_df['score'] < 6]
+    
+    filtered_df['final_score'] = (
+        filtered_df['popularity'] * 0.3 +
+        filtered_df['favorites'] * 0.2 +
+        filtered_df['scored_by'] * 0.2 +
+        filtered_df['score'] * 0.2 +
+        filtered_df['year'] * 0.1
+    )
     
     # Lấy top N anime có score cao nhất
-    lowest_anime = filtered_df.sort_values(by='score', ascending=True).head(request.top_n)
+    lowest_anime = filtered_df.sort_values(by='final_score', ascending=True).head(request.top_n)
 
     # Chọn cột muốn trả về
     recommendations = lowest_anime[['mal_id','title', 'genres', 'studios', 'year', 'score', 'image_url']].to_dict(orient='records')

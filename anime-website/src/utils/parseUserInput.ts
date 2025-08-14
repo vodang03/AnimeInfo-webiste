@@ -116,7 +116,9 @@ export function parseUserInput(input: string): RequestParams | null {
   } else if (year) {
     apiType = isUnrecommend ? "by_year_unrecommend" : "by_year";
   } else if (lowerInput.includes("hay")) {
-    apiType = isUnrecommend ? "unrecommend" : "recommend";
+    apiType = "recommend";
+  } else {
+    apiType = "unrecommend";
   }
 
   // Validate

@@ -737,7 +737,7 @@ exports.getAnimeByGenres = async (req, res) => {
     const animeList = await Anime.findAll({
       where: {
         year: {
-          [Op.between]: [2015, 2025], // lọc năm trong khoảng 2020 - 2024
+          [Op.between]: [2015, 2025], // lọc năm trong khoảng 2015 - 2025
         },
       },
 
@@ -763,7 +763,15 @@ exports.getAnimeByGenres = async (req, res) => {
 
       limit: 20,
       distinct: true,
-      order: [["scored_by", "DESC"]],
+      // order: [["scored_by", "DESC"]],
+      order: [
+        [
+          literal(
+            `(popularity * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
+          ),
+          "DESC",
+        ],
+      ],
     });
 
     res.json(animeList);
