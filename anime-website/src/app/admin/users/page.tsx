@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Trash2, Settings } from "lucide-react";
 import { delAccount, fetchAllUser, toggleAccountLock } from "@/api/user";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal ";
+import { toast } from "react-toastify";
 
 interface UserInfo {
   user_id: number;
@@ -29,13 +31,22 @@ const RoleBadge = ({ role }: { role: string }) => {
   );
 };
 
+// const deleteAccount = async (user_id: number) => {
+//   await delAccount(user_id);
+//   location.reload();
+// };
+
 const deleteAccount = async (user_id: number) => {
   await delAccount(user_id);
+  toast.success("Xoá tài khoản thành công");
   location.reload();
 };
 
 export default function AdminUserList() {
   const [users, setUsers] = useState<UserInfo[]>([]);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const [selectedUserId, setSelectedUserId] = useState<number>();
 
   useEffect(() => {
     const getuser = async () => {
@@ -104,7 +115,10 @@ export default function AdminUserList() {
 
                     <button
                       className="flex items-center text-sm text-red-600 hover:text-red-800 transition"
-                      onClick={() => deleteAccount(u.user_id)}
+                      onClick={() => {
+                        setShowDeleteConfirm(true);
+                        setSelectedUserId(u.user_id);
+                      }}
                     >
                       <Trash2 className="w-4 h-4 mr-1" />
                       Xoá tài khoản
@@ -113,6 +127,18 @@ export default function AdminUserList() {
                 </td>
               </tr>
             ))}
+
+            {showDeleteConfirm && (
+              <ConfirmDeleteModal
+                onCancel={() => setShowDeleteConfirm(false)}
+                onConfirm={async () => {
+                  setShowDeleteConfirm(false);
+                  if (selectedUserId !== undefined) {
+                    await deleteAccount(selectedUserId);
+                  }
+                }}
+              />
+            )}
           </tbody>
         </table>
         {/* <p className="text-sm text-gray-500 mt-3">
