@@ -55,6 +55,42 @@ export const fetchGenreThemeAnimeSearch = async (
   }
 };
 
+export const fetchNameGenreThemeAnimeSearch = async (
+  query?: string,
+  genre?: string,
+  theme?: string
+) => {
+  try {
+    if (!query && !genre && !theme) return []; // chỉ khi cả hai đều rỗng mới trả []
+
+    const params: { q?: string; genre?: string; theme?: string } = {};
+
+    if (query) {
+      params.q = query;
+    }
+
+    if (genre) {
+      params.genre = genre;
+    }
+
+    if (theme) {
+      params.theme = theme;
+    }
+
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/anime/namegenrethemesearch`,
+      {
+        params,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error searching anime:", error);
+    throw error;
+  }
+};
+
 export const fetchGenreAnimeSearch = async (genre?: string) => {
   try {
     if (!genre) return [];

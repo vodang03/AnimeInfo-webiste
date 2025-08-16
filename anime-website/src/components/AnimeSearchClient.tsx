@@ -6,6 +6,7 @@ import {
   fetchGenreAnimeSearch,
   fetchGenres,
   fetchGenreThemeAnimeSearch,
+  fetchNameGenreThemeAnimeSearch,
   fetchThemeAnimeSearch,
   fetchThemes,
 } from "@/api/anime";
@@ -92,7 +93,16 @@ export default function AnimeSearchClient() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (genre && theme) {
+        if (query && (genre || theme)) {
+          const data = await fetchNameGenreThemeAnimeSearch(
+            query,
+            genre!,
+            theme!
+          );
+          setSelectedGenres(genre ? [genre] : []);
+          setSelectedTheme(theme ? [theme] : []);
+          setAnimeList(data);
+        } else if (genre && theme) {
           const data = await fetchGenreThemeAnimeSearch(genre, theme);
           setSelectedGenres([genre]);
           setSelectedTheme([theme]);

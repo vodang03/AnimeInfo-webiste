@@ -27,6 +27,7 @@ const {
   getWatchStatusAnimeByUserId,
   getAllThemes,
   searchAnimeByGenreTheme,
+  searchAnimeCombined,
 } = require("../controllers/anime.controller");
 
 router.get("/", getAllAnime);
@@ -57,6 +58,7 @@ router.get("/search", searchAnime);
 router.get("/genresearch", searchAnimeByGenre);
 router.get("/themesearch", searchAnimeByTheme);
 router.get("/genrethemesearch", searchAnimeByGenreTheme);
+router.get("/namegenrethemesearch", searchAnimeCombined);
 
 // Thêm vào Favorite
 router.post("/favorite", addFavoriteAnime);

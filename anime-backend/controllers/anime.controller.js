@@ -496,6 +496,101 @@ exports.searchAnimeByGenreTheme = async (req, res) => {
   }
 };
 
+exports.searchAnimeCombined = async (req, res) => {
+  console.log("đã nhận được lệnh");
+
+  try {
+    const { q, genre, theme } = req.query;
+
+    const whereCondition = {};
+
+    // // Điều kiện tìm kiếm theo tên (nếu có q)
+    // if (q) {
+    //   whereCondition[Op.or] = [
+    //     { title: { [Op.like]: `%${q}%` } },
+    //     { title_vietnamese: { [Op.like]: `%${q}%` } },
+    //   ];
+    // }
+
+    // console.log(whereCondition);
+
+    const includeOptions = [];
+
+    // Lọc theo genre
+    if (genre) {
+      includeOptions.push({
+        model: Genre,
+        attributes: ["name"],
+        where: { name: genre },
+        through: { attributes: [] },
+        required: true,
+      });
+    } else {
+      includeOptions.push({
+        model: Genre,
+        attributes: ["name"],
+        through: { attributes: [] },
+      });
+    }
+
+    // Lọc theo theme
+    if (theme) {
+      includeOptions.push({
+        model: Theme,
+        attributes: ["name"],
+        where: { name: theme },
+        through: { attributes: [] },
+        required: true,
+      });
+    } else {
+      includeOptions.push({
+        model: Theme,
+        attributes: ["name"],
+        through: { attributes: [] },
+      });
+    }
+
+    // Luôn include demographic
+    includeOptions.push({
+      model: Demographic,
+      attributes: ["name"],
+      through: { attributes: [] },
+    });
+
+    const result = await Anime.findAll({
+      where: {
+        [Op.or]: [
+          { title: { [Op.like]: `%${q}%` } },
+          { title_vietnamese: { [Op.like]: `%${q}%` } },
+        ],
+      },
+      include: includeOptions,
+      order: [
+        [
+          literal(
+            `(popularity * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
+          ),
+          "DESC",
+        ],
+      ],
+      distinct: true,
+    });
+
+    // Lọc bỏ thể loại nhạy cảm nếu có
+    const filteredRows = result.filter((anime) => {
+      const genreNames = anime.Genres.map((g) => g.name);
+      return !genreNames.some((name) => sensitiveGenres.includes(name));
+    });
+
+    console.log(filteredRows);
+
+    res.json(filteredRows);
+  } catch (err) {
+    console.error("Lỗi khi tìm kiếm tổng hợp:", err);
+    res.status(500).json({ message: "Lỗi khi tìm kiếm anime." });
+  }
+};
+
 exports.getAnimeById = async (req, res) => {
   const animeId = req.params.id;
   // console.log(animeId);
