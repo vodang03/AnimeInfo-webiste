@@ -94,7 +94,7 @@ exports.getBestAnime = async (req, res) => {
       order: [
         [
           literal(
-            `(popularity * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
+            `(members * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
           ),
           "DESC",
         ],
@@ -284,7 +284,7 @@ exports.hintAnime = async (req, res) => {
       order: [
         [
           literal(
-            `(popularity * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
+            `(members * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
           ),
           "DESC",
         ],
@@ -327,7 +327,7 @@ exports.searchAnime = async (req, res) => {
       order: [
         [
           literal(
-            `(popularity * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
+            `(members * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
           ),
           "DESC",
         ],
@@ -376,7 +376,7 @@ exports.searchAnimeByGenre = async (req, res) => {
       order: [
         [
           literal(
-            `(popularity * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
+            `(members * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
           ),
           "DESC",
         ],
@@ -420,7 +420,7 @@ exports.searchAnimeByTheme = async (req, res) => {
       order: [
         [
           literal(
-            `(popularity * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
+            `(members * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
           ),
           "DESC",
         ],
@@ -479,7 +479,7 @@ exports.searchAnimeByGenreTheme = async (req, res) => {
       order: [
         [
           literal(
-            `(popularity * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
+            `(members * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
           ),
           "DESC",
         ],
@@ -568,7 +568,7 @@ exports.searchAnimeCombined = async (req, res) => {
       order: [
         [
           literal(
-            `(popularity * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
+            `(members * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
           ),
           "DESC",
         ],
@@ -862,7 +862,7 @@ exports.getAnimeByGenres = async (req, res) => {
       order: [
         [
           literal(
-            `(popularity * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
+            `(members * 0.3 + favorites * 0.2 + scored_by * 0.2 + score * 0.2 + YEAR(aired_from) * 0.1)`
           ),
           "DESC",
         ],
