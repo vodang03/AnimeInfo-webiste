@@ -26,6 +26,7 @@ export default function ChatBox({ roomId }: { roomId: number }) {
   const [typingUser, setTypingUser] = useState<string | null>(null);
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Tự động cuộn xuống khi có tin nhắn mới
   useEffect(() => {
@@ -101,10 +102,16 @@ export default function ChatBox({ roomId }: { roomId: number }) {
 
   const handleTyping = () => {
     if (!socket) return;
+
     socket.emit("typing", { roomId, username: user!.user.username });
 
-    // sau 10s không nhập thì ngừng
-    setTimeout(() => {
+    // clear timeout cũ nếu có
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    // tạo timeout mới
+    typingTimeoutRef.current = setTimeout(() => {
       socket.emit("stop_typing", { roomId });
     }, 10000);
   };
