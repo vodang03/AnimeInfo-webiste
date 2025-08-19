@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChatMessage from "@/components/ChatMessage";
 import MessageInput from "@/components/MessageInput";
 import { createMessage, fetchMessages } from "@/api/discussion";
@@ -23,6 +23,17 @@ export default function ChatBox({ roomId }: { roomId: number }) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [typingUser, setTypingUser] = useState<string | null>(null);
+
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
+
+  // Tự động cuộn xuống khi có tin nhắn mới
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   // Socket init
   useEffect(() => {
@@ -52,8 +63,20 @@ export default function ChatBox({ roomId }: { roomId: number }) {
       setMessages((prev) => [...prev, { ...msg, isSender }]);
     });
 
+    socket.on("user_typing", (username: string) => {
+      if (username !== user.user.username) {
+        setTypingUser(username);
+      }
+    });
+
+    socket.on("user_stop_typing", () => {
+      setTypingUser(null);
+    });
+
     return () => {
       socket.off("receive_message");
+      socket.off("user_typing");
+      socket.off("user_stop_typing");
     };
   }, [socket, user, roomId]);
 
@@ -76,15 +99,38 @@ export default function ChatBox({ roomId }: { roomId: number }) {
     socket.emit("send_message", newMessage);
   };
 
+  const handleTyping = () => {
+    if (!socket) return;
+    socket.emit("typing", { roomId, username: user!.user.username });
+
+    // sau 10s không nhập thì ngừng
+    setTimeout(() => {
+      socket.emit("stop_typing", { roomId });
+    }, 10000);
+  };
+
   return (
     <div className="h-full bg-white flex flex-col rounded-xl border">
-      <div className="flex-1 p-4 pb-10 overflow-y-auto">
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 p-4 pb-10 overflow-y-auto"
+      >
         {messages.map((msg) => (
           <ChatMessage key={msg.id} {...msg} />
         ))}
       </div>
+
       <div className="border-t p-4">
-        <MessageInput onSend={handleSend} />
+        {typingUser && (
+          <div className="text-sm text-gray-500 mb-2">
+            {typingUser} đang nhập...
+          </div>
+        )}
+        <MessageInput
+          onSend={handleSend}
+          onTyping={handleTyping}
+          onStopTyping={() => socket?.emit("stop_typing", { roomId })}
+        />
       </div>
     </div>
   );

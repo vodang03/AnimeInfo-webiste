@@ -5,8 +5,12 @@ import { Send } from "lucide-react";
 
 export default function MessageInput({
   onSend,
+  onTyping,
+  onStopTyping,
 }: {
   onSend: (message: string, file?: File) => void;
+  onTyping?: () => void;
+  onStopTyping?: () => void;
 }) {
   const [message, setMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -42,7 +46,11 @@ export default function MessageInput({
         type="text"
         placeholder="Nhập tin nhắn..."
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onFocus={() => onTyping?.()}
+        onBlur={() => onStopTyping?.()}
+        onChange={(e) => {
+          setMessage(e.target.value);
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter" && message.trim() !== "") {
             handleSend();
