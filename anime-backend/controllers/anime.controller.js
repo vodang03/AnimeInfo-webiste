@@ -199,7 +199,15 @@ exports.getSeasonalAnime = async (req, res) => {
           through: { attributes: [] }, // bỏ thông tin bảng trung gian
         },
       ],
-      order: [["score", "DESC"]],
+      // order: [["score", "DESC"]],
+      order: [
+        [
+          literal(
+            `(members * 0.3 + favorites * 0.2 + scored_by * 0.1 + score * 0.2 + YEAR(aired_from) * 0.2)`
+          ),
+          "DESC",
+        ],
+      ],
     });
 
     // Trả kết quả
@@ -879,7 +887,7 @@ exports.getAnimeByGenres = async (req, res) => {
 // POST import anime từ API Jikan
 exports.importAnime = async (req, res) => {
   try {
-    const startPage = parseInt(req.query.startPage) || 1058;
+    const startPage = parseInt(req.query.startPage) || 1100;
     const endPage = parseInt(req.query.endPage) || 1158;
 
     const updatedAnimeTitles = [];

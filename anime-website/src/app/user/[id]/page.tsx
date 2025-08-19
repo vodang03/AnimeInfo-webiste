@@ -12,6 +12,7 @@ import {
 import AvatarPickerModal from "@/components/AvatarPickerModal";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal ";
 import { useUser } from "@/contexts/UserContext";
+import { genreTranslations } from "@/utils/genreTranslations";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -412,7 +413,9 @@ export default function UserProfileForm() {
                     onChange={() => handleCheckboxChange(namegenre.genre_id)}
                     disabled={isDisabled}
                   />
-                  <span className="text-gray-800">{namegenre.name}</span>
+                  <span className="text-gray-800">
+                    {genreTranslations[namegenre.name] || namegenre.name}
+                  </span>
                 </label>
               );
             })}
