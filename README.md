@@ -24,3 +24,21 @@ Dự án xây dựng một **website thông tin anime** cho phép người dùng
 - **Realtime**: Socket.IO
 
 ---
+
+## 🎨 Một số giao diện của trang web
+
+### Trang chủ
+
+![Trang chủ](anime-website/public/images/1.png)
+
+### Trang tìm kiếm
+
+![Trang tìm kiếm](images/search.png)
+
+### Trang chi tiết anime
+
+![Trang chi tiết](images/detail.png)
+
+### Trang chat với AI
+
+![Chat AI](images/chat.png)
