@@ -31,14 +31,12 @@ Dự án xây dựng một **website thông tin anime** cho phép người dùng
 
 ![Trang chủ](anime-website/public/images/1.png)
 
-### Trang tìm kiếm
-
-![Trang tìm kiếm](images/search.png)
+![Phần gợi ý anime theo thể loại](anime-website/public/images/2.png)
 
 ### Trang chi tiết anime
 
-![Trang chi tiết](images/detail.png)
+![Trang chi tiết](anime-website/public/images/3.png)
 
-### Trang chat với AI
+### Trang tìm kiếm
 
-![Chat AI](images/chat.png)
+![Trang tìm kiếm](anime-website/public/images/4.png)
